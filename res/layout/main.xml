@@ -27,11 +27,16 @@
 	android:layout_weight="1"
 	/>		
 </LinearLayout>
-
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:id="@+id/query_result"
-    android:textSize="18sp"
-    />
+<ScrollView
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	<TextView
+		android:paddingRight="5sp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/query_result"
+		android:textSize="20sp"
+	/>
+</ScrollView>
 </LinearLayout>
