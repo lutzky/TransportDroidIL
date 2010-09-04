@@ -1,23 +1,30 @@
 package net.lutzky.transportdroidil;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TransportDroidIL extends Activity {
-	/** Called when the activity is first created. */
+	private static final String SEPARATOR = "\n";
 
 	private String lastResult;
 	private Exception lastException;
+
+	private static final int MAX_HISTORY = 10000;
 
 	private void setButtonsEnabled(boolean enabled) {
 		Button submit_egged = (Button) findViewById(R.id.submit_egged);
@@ -51,7 +58,7 @@ public class TransportDroidIL extends Activity {
 				dialog.hide();
 
 				Toast toast = Toast.makeText(getApplicationContext(),
-						exceptionText, Toast.LENGTH_SHORT);
+						exceptionText, Toast.LENGTH_LONG);
 				toast.show();
 
 				setButtonsEnabled(true);
@@ -62,6 +69,8 @@ public class TransportDroidIL extends Activity {
 		final String query = queryEditText.getText().toString();
 
 		setButtonsEnabled(false);
+
+		addCompletionOption(query);
 
 		Thread t = new Thread() {
 			@Override
@@ -101,5 +110,46 @@ public class TransportDroidIL extends Activity {
 				runQuery(new BusGovIlGetter());
 			}
 		});
+
+		loadPreviousQueries();
+
+		AutoCompleteTextView query = (AutoCompleteTextView) findViewById(R.id.query);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				R.layout.list_item, this.completionOptions);
+		query.setAdapter(adapter);
 	}
+
+	private void loadPreviousQueries() {
+		SharedPreferences settings = getSharedPreferences("Queries", 0);
+		String allQueries = settings.getString("Queries", "");
+		for (String query : allQueries.split(SEPARATOR)) {
+			completionOptions.add(query);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	void addCompletionOption(String query) {
+		// Add our completion to the actual active completions database
+		AutoCompleteTextView queryView = (AutoCompleteTextView) findViewById(R.id.query);
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>)(queryView.getAdapter());
+		arrayAdapter.add(query);
+
+		// Add our completion to the persistent storage
+		completionOptions.add(0, query);
+
+		SharedPreferences settings = getSharedPreferences("Queries", 0);
+		SharedPreferences.Editor editor = settings.edit();
+		StringBuilder buffer = new StringBuilder(completionOptions.size());
+		for (String s : completionOptions.subList(0, MAX_HISTORY)) {
+			buffer.append(s);
+			buffer.append(SEPARATOR);
+		}
+		try {
+			buffer.deleteCharAt(buffer.length() - 1);
+		} catch (Exception e) {}
+		editor.putString("Queries", buffer.toString());
+		editor.commit();
+	}
+
+	final List<String> completionOptions = new LinkedList<String>();
 }
