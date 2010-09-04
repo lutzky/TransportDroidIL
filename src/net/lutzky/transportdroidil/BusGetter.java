@@ -57,10 +57,18 @@ public abstract class BusGetter {
 
 	public String getFilteredResult() {
 		if (filteredResult == null) {
-			filteredResult = getHtmlResult().replace("<br>", "\n").replace(
-					"<li>", "\n * ").replace("&nbsp", " ").replace("<BUS>", "")
-					.replace("</BUS>", "").replace("<COMPANY>", "").replace(
-							"</COMPANY>", "").replaceAll(" *(,? ) *", "$1").replaceAll("(\n ?)+","\n");
+			filteredResult = getHtmlResult()
+				.replace("<br>", "\n")
+				.replace("<p>", "\n")
+				.replace("<li>", "\n * ")
+				.replace("&nbsp", " ")
+				.replace("<BUS>", "")
+				.replace("</BUS>", "")
+				.replace("<COMPANY>", "")
+				.replace("</COMPANY>", "")
+				.replaceAll(" *(,? ) *", "$1")
+				.replaceAll("^\n+", "")
+				.replaceAll("(\n ?)+","\n");
 		}
 
 		return filteredResult;
