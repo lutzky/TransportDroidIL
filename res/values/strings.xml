@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Transport Droid IL</string>
+<string name="default_query">מאיפה לאן ומתי ברצונך לנסוע?</string>
+<string name="query_egged">שאל את אגד</string>
+<string name="query_busgovil">שאל את משרד התחבורה</string>
+
+<string name="error">לא הולך: %s</string>
+<string name="please_wait">אנא המתן</string>
+</resources>
