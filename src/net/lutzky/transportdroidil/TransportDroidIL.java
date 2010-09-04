@@ -34,16 +34,23 @@ public class TransportDroidIL extends Activity {
 		submit_busgovil.setEnabled(enabled);
 	}
 
+	private void updateResultText(String result) {
+		SharedPreferences.Editor editor = getPreferences(0).edit();
+		editor.putString("Result", result);
+		editor.commit();
+		TextView tv = (TextView)findViewById(R.id.query_result);
+		tv.setText(result);
+	}
+
 	private void runQuery(final BusGetter bg) {
 		final Handler mHandler = new Handler();
-		final TextView queryResult = (TextView) findViewById(R.id.query_result);
 		final ProgressDialog dialog = ProgressDialog.show(this, "",
 				getString(R.string.please_wait));
 
 		final Runnable mUpdateResults = new Runnable() {
 			@Override
 			public void run() {
-				queryResult.setText(lastResult);
+				updateResultText(lastResult);
 				dialog.hide();
 				setButtonsEnabled(true);
 			}
@@ -117,10 +124,13 @@ public class TransportDroidIL extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.list_item, this.completionOptions);
 		query.setAdapter(adapter);
+
+		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
+		tvQueryResult.setText(getPreferences(0).getString("Result", ""));
 	}
 
 	private void loadPreviousQueries() {
-		SharedPreferences settings = getSharedPreferences("Queries", 0);
+		SharedPreferences settings = getPreferences(0);
 		String allQueries = settings.getString("Queries", "");
 		for (String query : allQueries.split(SEPARATOR)) {
 			completionOptions.add(query);
@@ -131,22 +141,26 @@ public class TransportDroidIL extends Activity {
 	void addCompletionOption(String query) {
 		// Add our completion to the actual active completions database
 		AutoCompleteTextView queryView = (AutoCompleteTextView) findViewById(R.id.query);
-		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>)(queryView.getAdapter());
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) (queryView
+				.getAdapter());
 		arrayAdapter.add(query);
 
 		// Add our completion to the persistent storage
 		completionOptions.add(0, query);
 
-		SharedPreferences settings = getSharedPreferences("Queries", 0);
+		SharedPreferences settings = getPreferences(0);
 		SharedPreferences.Editor editor = settings.edit();
 		StringBuilder buffer = new StringBuilder(completionOptions.size());
-		for (String s : completionOptions.subList(0, MAX_HISTORY)) {
+		List<String> toSave = completionOptions.subList(0, Math.min(
+				completionOptions.size(), MAX_HISTORY));
+		for (String s : toSave) {
 			buffer.append(s);
 			buffer.append(SEPARATOR);
 		}
 		try {
 			buffer.deleteCharAt(buffer.length() - 1);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		editor.putString("Queries", buffer.toString());
 		editor.commit();
 	}
