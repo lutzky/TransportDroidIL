@@ -1,6 +1,5 @@
 package net.lutzky.transportdroidil;
 
-
 public class EggedGetter extends BusGetter {
 	public static final String url = "http://mslworld.egged.co.il/eggedtimetable/WebForms/wsUnicell.asmx/getAnswer";
 
