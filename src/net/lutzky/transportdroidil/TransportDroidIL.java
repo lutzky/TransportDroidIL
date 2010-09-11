@@ -139,6 +139,11 @@ public class TransportDroidIL extends Activity {
 
 	@SuppressWarnings("unchecked")
 	void addCompletionOption(String query) {
+		if (completionOptions.contains(query)) {
+			// No duplicates.
+			return;
+		}
+
 		// Add our completion to the actual active completions database
 		AutoCompleteTextView queryView = (AutoCompleteTextView) findViewById(R.id.query);
 		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) (queryView
@@ -151,8 +156,7 @@ public class TransportDroidIL extends Activity {
 		SharedPreferences settings = getPreferences(0);
 		SharedPreferences.Editor editor = settings.edit();
 		StringBuilder buffer = new StringBuilder(completionOptions.size());
-		List<String> toSave = completionOptions.subList(0, Math.min(
-				completionOptions.size(), MAX_HISTORY));
+		List<String> toSave = uniqueBoundedList(completionOptions, MAX_HISTORY);
 		for (String s : toSave) {
 			buffer.append(s);
 			buffer.append(SEPARATOR);
@@ -163,6 +167,25 @@ public class TransportDroidIL extends Activity {
 		}
 		editor.putString("Queries", buffer.toString());
 		editor.commit();
+	}
+
+	static <E> List<E> uniqueBoundedList(List<E> l, int bound) {
+		List<E> result = new LinkedList<E>();
+
+		int count = 0;
+
+		for (E item : l) {
+			if (!result.contains(item)) {
+				result.add(item);
+				count += 1;
+			}
+
+			if (count == bound) {
+				return result;
+			}
+		}
+
+		return result;
 	}
 
 	final List<String> completionOptions = new LinkedList<String>();
