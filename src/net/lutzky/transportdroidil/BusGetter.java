@@ -40,10 +40,14 @@ public abstract class BusGetter {
 		return rawResult;
 	}
 
-	public String getHtmlResult() {
+	public String getHtmlResult() throws InvalidServerResponseException {
 		if (htmlResult == null) {
 			// Drop leading "{\"d\":\""
 			htmlResult = rawResult.trim().substring(6);
+
+			if (htmlResult.length() < 2) {
+				throw new InvalidServerResponseException("Response too short");
+			}
 
 			// Drop trailing "\"}"
 			htmlResult = htmlResult.substring(0, htmlResult.length() - 2);
@@ -55,7 +59,7 @@ public abstract class BusGetter {
 		return htmlResult;
 	}
 
-	public String getFilteredResult() {
+	public String getFilteredResult() throws InvalidServerResponseException {
 		if (filteredResult == null) {
 			filteredResult = getHtmlResult()
 				.replace("<br>", "\n")

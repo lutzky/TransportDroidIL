@@ -90,6 +90,10 @@ public class TransportDroidIL extends Activity {
 					lastException = e;
 					mHandler.post(mShowError);
 				}
+				catch (InvalidServerResponseException e) {
+					lastException = e;
+					mHandler.post(mShowError);
+				}
 			}
 		};
 
