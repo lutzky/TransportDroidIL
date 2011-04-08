@@ -9,6 +9,11 @@ public class EggedGetter extends BusGetter {
 	}
 
 	@Override
+	protected String getAppropriateReferer() {
+		return "http://mslworld.egged.co.il/eggedtimetable/WebForms/wfrmMain.aspx?state=3&company=1&language=he&freelang=+&width=1024";
+	}
+
+	@Override
 	String getUrl() {
 		return url;
 	}

@@ -21,6 +21,12 @@ public abstract class BusGetter {
 		HttpURLConnection hurl = (HttpURLConnection) url.openConnection();
 		hurl.setRequestMethod("POST");
 		hurl.setDoOutput(true);
+
+		String appropriateReferer = getAppropriateReferer();
+		if (appropriateReferer != null) {
+			hurl.setRequestProperty("Referer", appropriateReferer);
+		}
+
 		hurl.setRequestProperty("Accept-Charset", "utf-8");
 		hurl.setRequestProperty("Content-Type",
 				"application/json; charset=utf-8");
@@ -77,4 +83,6 @@ public abstract class BusGetter {
 
 		return filteredResult;
 	}
+
+	abstract protected String getAppropriateReferer();
 }
