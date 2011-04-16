@@ -6,6 +6,10 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 public abstract class BusGetter {
 	abstract String getUrl();
 
@@ -46,26 +50,16 @@ public abstract class BusGetter {
 		return rawResult;
 	}
 
-	public String getHtmlResult() throws InvalidServerResponseException {
+	public String getHtmlResult() throws JSONException {
 		if (htmlResult == null) {
-			// Drop leading "{\"d\":\""
-			htmlResult = rawResult.trim().substring(6);
-
-			if (htmlResult.length() < 2) {
-				throw new InvalidServerResponseException("Response too short");
-			}
-
-			// Drop trailing "\"}"
-			htmlResult = htmlResult.substring(0, htmlResult.length() - 2);
-
-			htmlResult = htmlResult.replace("\\u003c", "<");
-			htmlResult = htmlResult.replace("\\u003e", ">");
+			JSONObject result = (JSONObject) new JSONTokener(rawResult).nextValue();
+			htmlResult = result.getString("d");
 		}
 
 		return htmlResult;
 	}
 
-	public String getFilteredResult() throws InvalidServerResponseException {
+	public String getFilteredResult() throws JSONException {
 		if (filteredResult == null) {
 			filteredResult = getHtmlResult()
 				.replace("<br>", "\n")

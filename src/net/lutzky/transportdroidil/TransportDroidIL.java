@@ -1,6 +1,5 @@
 package net.lutzky.transportdroidil;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,11 +85,7 @@ public class TransportDroidIL extends Activity {
 					bg.runQuery(query);
 					lastResult = bg.getFilteredResult();
 					mHandler.post(mUpdateResults);
-				} catch (IOException e) {
-					lastException = e;
-					mHandler.post(mShowError);
-				}
-				catch (InvalidServerResponseException e) {
+				} catch (Exception e) {
 					lastException = e;
 					mHandler.post(mShowError);
 				}

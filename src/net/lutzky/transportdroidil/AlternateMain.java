@@ -2,6 +2,8 @@ package net.lutzky.transportdroidil;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+
 public class AlternateMain {
 
 	/**
@@ -21,7 +23,7 @@ public class AlternateMain {
 		System.out.println("Okay, here's what we got:");
 		try {
 			System.out.println(bg.getFilteredResult());
-		} catch (InvalidServerResponseException e) {
+		} catch (JSONException e) {
 			System.err.println("Damnit, invalid server response.");
 			e.printStackTrace();
 		}
