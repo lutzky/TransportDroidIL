@@ -80,9 +80,10 @@ public class TransportDroidIL extends Activity {
 	protected String addressToQueryString(Address address) {
 		if (address == null)
 			return "";
-		final String firstLine = address.getAddressLine(0);
+		String firstLine = address.getAddressLine(0);
 		if (firstLine == null)
 			return "";
+		firstLine = firstLine.replaceFirst("(\\d+)-(\\d+)", "\\1");
 		String result = "מ" + firstLine;
 		final String secondLine = address.getAddressLine(1);
 		if (secondLine != null)
