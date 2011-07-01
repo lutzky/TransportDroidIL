@@ -3,8 +3,8 @@
     
     <string name="app_name">Transport Droid IL</string>
 <string name="default_query">מאיפה לאן ומתי ברצונך לנסוע?</string>
-<string name="query_egged">שאל את אגד</string>
-<string name="query_busgovil">שאל את משרד התחבורה</string>
+<string name="query_egged">אגד</string>
+<string name="query_busgovil">משרד התחבורה</string>
 
 <string name="error">לא הולך: %s</string>
 <string name="please_wait">אנא המתן</string>
