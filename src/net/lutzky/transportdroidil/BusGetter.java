@@ -13,13 +13,13 @@ import org.json.JSONTokener;
 public abstract class BusGetter {
 	abstract String getUrl();
 
-	abstract String getQueryJson(String query);
+	abstract String getQueryJson(String query) throws JSONException;
 
 	private String rawResult = null;
 	private String htmlResult = null;
 	private String filteredResult = null;
 
-	public void runQuery(String query) throws IOException {
+	public void runQuery(String query) throws IOException, JSONException {
 		URL url = new URL(getUrl());
 
 		HttpURLConnection hurl = (HttpURLConnection) url.openConnection();
@@ -40,6 +40,10 @@ public abstract class BusGetter {
 		wr.write(getQueryJson(query));
 
 		wr.flush();
+
+		if (hurl.getResponseCode() != 200) {
+			throw new IOException("" + hurl.getResponseCode() + " " + hurl.getResponseMessage());
+		}
 
 		// We're only expecting one line of input anyway.
 		rawResult = (new BufferedReader(new InputStreamReader(hurl

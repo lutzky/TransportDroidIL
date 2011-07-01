@@ -1,11 +1,17 @@
 package net.lutzky.transportdroidil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BusGovIlGetter extends BusGetter {
 	public static final String url = "http://bus.gov.il/WebForms/wsUnicell.asmx/getAnswerMot";
 
 	@Override
-	String getQueryJson(String query) {
-		return String.format("{\"sParams\":\"%s\",\"strSession\":\"0\"}", query);
+	String getQueryJson(String query) throws JSONException {
+		JSONObject jsonQuery = new JSONObject();
+		jsonQuery.put("sParams", query);
+		jsonQuery.put("strSession", 0);
+		return jsonQuery.toString();
 	}
 
 	@Override
