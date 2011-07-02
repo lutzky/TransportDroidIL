@@ -12,12 +12,16 @@ public class BusGetterTest extends TestCase {
 	}
 	public void testEggedQuery() throws Throwable {
 		BusGetter bg = new EggedGetter();
-		bg.runQuery("חיפה לת\"א");
+		bg.runQuery("חוף הכרמל לת\"א");
+		assertSaneResult(bg.getFilteredResult());
+		bg.runQuery("צומת ג'למה לחיפה");
 		assertSaneResult(bg.getFilteredResult());
 	}
 	public void testBusGovIlQuery() throws Throwable {
 		BusGetter bg = new BusGovIlGetter();
-		bg.runQuery("חיפה לת\"א");
+		bg.runQuery("חוף הכרמל לת\"א");
+		assertSaneResult(bg.getFilteredResult());
+		bg.runQuery("צומת ג'למה לחיפה");
 		assertSaneResult(bg.getFilteredResult());
 	}
 }
