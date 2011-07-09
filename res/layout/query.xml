@@ -19,7 +19,8 @@
         android:completionHint="@string/query_from_hint"
         
         android:id="@+id/query_from"
-        app:preferences_field_name="autocomplete-places">
+        app:preferences_field_name="autocomplete-places"
+        android:imeOptions="actionNext">
     </net.lutzky.transportdroidil.EnhancedTextView>
     <net.lutzky.transportdroidil.EnhancedTextView
         android:ellipsize="start"
@@ -34,7 +35,8 @@
         android:completionThreshold="1"
         android:completionHint="@string/query_to_hint"
         
-        android:id="@+id/query_to">
+        android:id="@+id/query_to"
+        android:imeOptions="actionNext">
     </net.lutzky.transportdroidil.EnhancedTextView>
     <net.lutzky.transportdroidil.EnhancedTextView
         android:ellipsize="start"
