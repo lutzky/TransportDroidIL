@@ -51,7 +51,8 @@
         android:completionHint="@string/query_time_hint"
         
         android:id="@+id/query_time"
-        app:preferences_field_name="autocomplete-time">
+        app:preferences_field_name="autocomplete-time"
+        android:imeOptions="actionGo">
     </net.lutzky.transportdroidil.EnhancedTextView>
 <LinearLayout android:orientation="horizontal"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">

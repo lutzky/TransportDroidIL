@@ -6,10 +6,13 @@ import java.util.Collection;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class QueryView extends LinearLayout {
 	private OnSearchButtonClickListener onSearchButtonClickListener = null; 
@@ -37,6 +40,18 @@ public class QueryView extends LinearLayout {
 		Button submit_egged = (Button) findViewById(R.id.submit_egged);
 		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
 		
+		getTimeTextView().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int action, KeyEvent event) {
+				if (action == EditorInfo.IME_ACTION_GO) {
+					// TODO click on the preferred provider.
+					onSearchButtonClickListener.onSearchButtonClick(QueryView.this, R.id.submit_busgovil);
+					return true;
+				}
+				return false;
+			}
+		});
+		
 		submit_egged.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -52,6 +67,12 @@ public class QueryView extends LinearLayout {
 					onSearchButtonClickListener.onSearchButtonClick(QueryView.this, R.id.submit_busgovil);
 			}
 		});
+	}
+	
+	@Override
+	public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return super.onKeyShortcut(keyCode, event);
 	}
 	
 	public void savePersistentState(SharedPreferences settings) {
