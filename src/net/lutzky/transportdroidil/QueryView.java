@@ -1,11 +1,13 @@
 package net.lutzky.transportdroidil;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -16,15 +18,21 @@ public class QueryView extends LinearLayout {
 			OnSearchButtonClickListener onSearchButtonClickListener) {
 		this.onSearchButtonClickListener = onSearchButtonClickListener;
 	}
-	
+
 	public QueryView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		inflate(context, R.layout.query, this);
 		
-		AutoCompleteTextView query = (AutoCompleteTextView) findViewById(R.id.query);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+		ArrayAdapter<String> placesAdapter = new ArrayAdapter<String>(context,
 				R.layout.list_item);
-		query.setAdapter(adapter);
+		ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(context,
+				R.layout.list_item);
+		getFromTextView().setAdapter(placesAdapter);
+		getToTextView().setAdapter(placesAdapter);
+		getTimeTextView().setAdapter(timeAdapter);
+		
+		// Share the list of completion options.
+		getToTextView().setCompletionOptions(getFromTextView().getCompletionOptions());
 
 		Button submit_egged = (Button) findViewById(R.id.submit_egged);
 		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
@@ -47,15 +55,20 @@ public class QueryView extends LinearLayout {
 	}
 	
 	public void savePersistentState(SharedPreferences settings) {
-		getQueryTextView().savePersistentState(settings);
+		getFromTextView().savePersistentState(settings);
+		// Not called for to because its shared with from.
+		getTimeTextView().savePersistentState(settings);
 	}
 	
 	public void loadPersistentState(SharedPreferences settings) {
-		getQueryTextView().loadPersistentState(settings);
+		getFromTextView().loadPersistentState(settings);
+		// Not called for to because its shared with from.
+		getTimeTextView().loadPersistentState(settings);
 	}
 
 	public String getQueryString() {
-		return getQueryTextView().getText() + "";
+		return getFromTextView().getText() + " ל" + getToTextView().getText() + " " + 
+				getTimeTextView().getText();
 	}
 	
 	public void setButtonsEnabled(boolean enabled) {
@@ -66,8 +79,16 @@ public class QueryView extends LinearLayout {
 		submit_busgovil.setEnabled(enabled);
 	}
 	
-	EnhancedTextView getQueryTextView() {
-		return (EnhancedTextView) findViewById(R.id.query);
+	EnhancedTextView getFromTextView() {
+		return (EnhancedTextView) findViewById(R.id.query_from);
+	}
+	
+	EnhancedTextView getToTextView() {
+		return (EnhancedTextView) findViewById(R.id.query_to);
+	}
+	
+	EnhancedTextView getTimeTextView() {
+		return (EnhancedTextView) findViewById(R.id.query_time);
 	}
 }
 

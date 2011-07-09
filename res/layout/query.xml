@@ -5,17 +5,52 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-<net.lutzky.transportdroidil.EnhancedTextView
-	android:gravity="right"
-	android:ellipsize="start"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:hint="@string/default_query"
-    android:id="@+id/query"
-    android:singleLine="true"
-    app:preferences_field_name="Queries"
->
-</net.lutzky.transportdroidil.EnhancedTextView>
+    <net.lutzky.transportdroidil.EnhancedTextView
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:hint="@string/query_from_hint"
+        
+        android:text="@string/query_from_hint"
+        android:selectAllOnFocus="true"
+        
+        android:completionThreshold="1"
+        android:completionHint="@string/query_from_hint"
+        
+        android:id="@+id/query_from"
+        app:preferences_field_name="autocomplete-places">
+    </net.lutzky.transportdroidil.EnhancedTextView>
+    <net.lutzky.transportdroidil.EnhancedTextView
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:hint="@string/query_to_hint"
+        
+        android:text="@string/query_to_hint"
+        android:selectAllOnFocus="true"
+        
+        android:completionThreshold="1"
+        android:completionHint="@string/query_to_hint"
+        
+        android:id="@+id/query_to">
+    </net.lutzky.transportdroidil.EnhancedTextView>
+    <net.lutzky.transportdroidil.EnhancedTextView
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:hint="@string/query_time_hint"
+        
+        android:text="@string/query_time_hint"
+        android:selectAllOnFocus="true"
+        
+        android:completionHint="@string/query_time_hint"
+        
+        android:id="@+id/query_time"
+        app:preferences_field_name="autocomplete-time">
+    </net.lutzky.transportdroidil.EnhancedTextView>
 <LinearLayout android:orientation="horizontal"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
 <Button
