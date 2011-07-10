@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -121,5 +122,13 @@ public class EnhancedTextView extends AutoCompleteTextView {
 		// no addAll until API 11
 		for (String s : completionOptions)
 			arrayAdapter.add(s);
+	}
+
+	public String getString() {
+		String text = getText().toString();
+		if (text.equals(getHint()))
+			return "";
+		else
+			return text;
 	}
 }

@@ -69,6 +69,8 @@ public class TransportDroidIL extends Activity {
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		final String query = queryView.getQueryString();
+		
+		Log.d(TAG, "Querying: " + query);
 
 		Thread t = new Thread() {
 			@Override

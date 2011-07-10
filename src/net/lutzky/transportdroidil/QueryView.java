@@ -2,6 +2,7 @@ package net.lutzky.transportdroidil;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -69,8 +70,11 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	}
 
 	public String getQueryString() {
-		return getFromTextView().getText() + " ל" + getToTextView().getText() + " " + 
-				getTimeTextView().getText();
+		String from = getFromTextView().getString();
+		String to = getToTextView().getString();
+		String time = getTimeTextView().getString();
+		
+		return from + " ל" + to + " " + time;
 	}
 	
 	public void setButtonsEnabled(boolean enabled) {

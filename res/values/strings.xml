@@ -8,8 +8,8 @@
 
 <string name="error">לא הולך: %s</string>
 <string name="please_wait">אנא המתן</string>
-<string name="query_from_hint">מוצא</string>
-<string name="query_to_hint">יעד</string>
+<string name="query_from_hint">המוצא לנסיעתך</string>
+<string name="query_to_hint">היעד שלך</string>
 <string name="query_time_hint">מתי? (לא חובה)</string>
 <string name="provider_pref">ספק המידע</string>
 <string-array name="providers_names">
