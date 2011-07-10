@@ -2,14 +2,22 @@ package net.lutzky.transportdroidil;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TransportDroidIL extends Activity {
+	private static final String TAG = "TransportDroidIL"; 
+	
 	private String lastResult;
 	private Exception lastException;
 
@@ -85,6 +93,7 @@ public class TransportDroidIL extends Activity {
 		setContentView(R.layout.main);
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
+		updateGoButton();
 		queryView.loadPersistentState(getPreferences(0));
 		queryView.setOnSearchButtonClickListener(new OnSearchButtonClickListener() {
 			@Override
@@ -106,5 +115,43 @@ public class TransportDroidIL extends Activity {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		queryView.savePersistentState(getPreferences(0));
 		super.onPause();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.preferences:
+			openPreferences();
+			return true;
+		}
+		return false;
+	}
+
+	private void openPreferences() {
+		Intent intent = new Intent(this, Preferences.class);
+		startActivityForResult(intent, 0);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		updateGoButton();
+	}
+
+	private void updateGoButton() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		String provider = settings.getString("provider", "mot");
+		Log.d(TAG, "Got provider=" + provider + ", updating query view.");
+		getQueryView().setProvider(provider);
+	}
+
+	private QueryView getQueryView() {
+		return (QueryView) findViewById(R.id.queryview);
 	}
 }

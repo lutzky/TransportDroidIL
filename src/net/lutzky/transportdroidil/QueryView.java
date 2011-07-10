@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class QueryView extends LinearLayout {
+public class QueryView extends LinearLayout implements View.OnClickListener {
 	private OnSearchButtonClickListener onSearchButtonClickListener = null; 
 
 	public void setOnSearchButtonClickListener(
@@ -35,49 +35,25 @@ public class QueryView extends LinearLayout {
 		// Share the list of completion options.
 		getToTextView().setCompletionOptions(getFromTextView().getCompletionOptions());
 
-		Button submit_egged = (Button) findViewById(R.id.submit_egged);
-		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
-		final InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		final Button submit_egged = (Button) findViewById(R.id.submit_egged);
+		final Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
 		
 		getTimeTextView().setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int action, KeyEvent event) {
-				if (action == EditorInfo.IME_ACTION_GO) {
-					// TODO click on the preferred provider.
-					imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
-					onSearchButtonClickListener.onSearchButtonClick(QueryView.this, R.id.submit_busgovil);
+				if (action == EditorInfo.IME_ACTION_SEARCH) {
+					if (submit_busgovil.getVisibility() == VISIBLE)
+						onClick(submit_busgovil);
+					else if (submit_egged.getVisibility() == VISIBLE)
+						onClick(submit_egged);
 					return true;
 				}
 				return false;
 			}
 		});
 		
-		
-		
-		submit_egged.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				if (onSearchButtonClickListener != null)
-					imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
-					onSearchButtonClickListener.onSearchButtonClick(QueryView.this, R.id.submit_egged);
-			}
-		});
-
-		submit_busgovil.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				if (onSearchButtonClickListener != null) {
-					imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
-					onSearchButtonClickListener.onSearchButtonClick(QueryView.this, R.id.submit_busgovil);
-				}
-			}
-		});
-	}
-	
-	@Override
-	public boolean onKeyShortcut(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		return super.onKeyShortcut(keyCode, event);
+		submit_egged.setOnClickListener(this);
+		submit_busgovil.setOnClickListener(this);
 	}
 	
 	public void savePersistentState(SharedPreferences settings) {
@@ -115,6 +91,29 @@ public class QueryView extends LinearLayout {
 	
 	EnhancedTextView getTimeTextView() {
 		return (EnhancedTextView) findViewById(R.id.query_time);
+	}
+
+	public void setProvider(String provider) {
+		Button motButton = (Button) findViewById(R.id.submit_busgovil), 
+			   eggedButton = (Button) findViewById(R.id.submit_egged);  
+		if (provider.equals("mot")) {
+			motButton.setVisibility(VISIBLE);
+			eggedButton.setVisibility(GONE);
+		}
+		else if (provider.equals("egged")) {
+			motButton.setVisibility(GONE);
+			eggedButton.setVisibility(VISIBLE);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		final InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		if (onSearchButtonClickListener != null) {
+			imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
+			onSearchButtonClickListener.onSearchButtonClick(QueryView.this, v.getId());
+		}
 	}
 }
 

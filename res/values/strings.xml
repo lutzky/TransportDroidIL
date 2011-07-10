@@ -11,4 +11,14 @@
 <string name="query_from_hint">מוצא</string>
 <string name="query_to_hint">יעד</string>
 <string name="query_time_hint">מתי? (לא חובה)</string>
+<string name="provider_pref">ספק המידע</string>
+<string-array name="providers_names">
+	<item>משרד התחבורה</item>
+	<item>אגד</item>
+</string-array>
+<string-array name="provider_values">
+    <item>mot</item>
+    <item>egged</item>
+</string-array>
+<string name="preferences">הגדרות</string>
 </resources>
