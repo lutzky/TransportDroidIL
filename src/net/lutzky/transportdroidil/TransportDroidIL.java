@@ -80,11 +80,11 @@ public class TransportDroidIL extends Activity {
 		if (firstLine == null)
 			return "";
 		firstLine = firstLine.replaceFirst("(\\d+)-(\\d+)", "\\1");
-		String result = "מ" + firstLine;
+		String result = firstLine;
 		final String secondLine = address.getAddressLine(1);
 		if (secondLine != null)
 			result += " " + secondLine;
-		return result + " ל";
+		return result;
 	}
 
 	private void runQuery(final BusGetter bg) {
