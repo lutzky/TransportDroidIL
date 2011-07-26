@@ -1,17 +1,9 @@
 package net.lutzky.transportdroidil;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -41,50 +33,6 @@ public class TransportDroidIL extends Activity {
 		editor.commit();
 		TextView tv = (TextView)findViewById(R.id.query_result);
 		tv.setText(result);
-	}
-	
-	private void getLocation() {
-		Triangulator t = new Triangulator(this);
-		final EnhancedTextView queryEditText = (EnhancedTextView) findViewById(R.id.query_from);
-
-		t.getLocation(10 * 1000, new LocationListener() {
-			@Override
-			public void onStatusChanged(String provider, int status, Bundle extras) {}
-			@Override
-			public void onProviderEnabled(String provider) {}
-			@Override
-			public void onProviderDisabled(String provider) {}
-			
-			@Override
-			public void onLocationChanged(Location location) {
-				if (location == null)
-					return;
-				Geocoder geo = new Geocoder(TransportDroidIL.this, new Locale("he"));
-				List<Address> addresses;
-				try {
-					addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-					if (addresses.size() > 0) {
-						String addressString = addressToQueryString(addresses.get(0));
-						queryEditText.setText(addressString);
-						queryEditText.setSelection(addressString.length());
-					}
-				} catch (IOException e) {}
-			}
-		});
-	}
-
-	protected String addressToQueryString(Address address) {
-		if (address == null)
-			return "";
-		String firstLine = address.getAddressLine(0);
-		if (firstLine == null)
-			return "";
-		firstLine = firstLine.replaceFirst("(\\d+)-(\\d+)", "\\1");
-		String result = firstLine;
-		final String secondLine = address.getAddressLine(1);
-		if (secondLine != null)
-			result += " " + secondLine;
-		return result;
 	}
 
 	private void runQuery(final BusGetter bg) {
@@ -145,8 +93,6 @@ public class TransportDroidIL extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		getLocation();
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		updateGoButton();

@@ -21,4 +21,5 @@
     <item>egged</item>
 </string-array>
 <string name="preferences">הגדרות</string>
+<string name="my_location">המיקום שלי</string>
 </resources>

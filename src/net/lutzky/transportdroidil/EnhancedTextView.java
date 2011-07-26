@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ArrayAdapter;

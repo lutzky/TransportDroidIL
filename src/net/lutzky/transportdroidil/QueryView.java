@@ -2,7 +2,6 @@ package net.lutzky.transportdroidil;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
