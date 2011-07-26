@@ -1,11 +1,17 @@
 package net.lutzky.transportdroidil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class EggedGetter extends BusGetter {
 	public static final String url = "http://mslworld.egged.co.il/eggedtimetable/WebForms/wsUnicell.asmx/getAnswer";
 
 	@Override
-	String getQueryJson(String query) {
-		return String.format("{\"str1\":\"%s\",\"strSession\":\"0\"}", query);
+	String getQueryJson(String query) throws JSONException {
+		JSONObject jsonQuery = new JSONObject();
+		jsonQuery.put("str1", query);
+		jsonQuery.put("strSession", 0);
+		return jsonQuery.toString();
 	}
 
 	@Override

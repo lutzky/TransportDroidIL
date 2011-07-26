@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://transportdroidil.lutzky.net/apk/res/custom"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <net.lutzky.transportdroidil.EnhancedTextView
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:hint="@string/query_from_hint"
+        
+        android:text="@string/query_from_hint"
+        android:selectAllOnFocus="true"
+        
+        android:completionThreshold="1"
+        android:completionHint="@string/query_from_hint"
+        
+        android:id="@+id/query_from"
+        app:preferences_field_name="autocomplete-places"
+        android:imeOptions="actionNext">
+    </net.lutzky.transportdroidil.EnhancedTextView>
+    <net.lutzky.transportdroidil.EnhancedTextView
+        android:ellipsize="start"
+        android:singleLine="true"
+        android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" 
+        android:hint="@string/query_to_hint"
+        
+        android:text="@string/query_to_hint"
+        android:selectAllOnFocus="true"
+        
+        android:completionThreshold="1"
+        android:completionHint="@string/query_to_hint"
+        
+        android:id="@+id/query_to"
+        android:imeOptions="actionNext">
+    </net.lutzky.transportdroidil.EnhancedTextView>
+<LinearLayout android:orientation="horizontal"
+	android:layout_width="fill_parent" android:layout_height="wrap_content">
+<Button
+    android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:id="@+id/submit_egged"
+	android:layout_weight="1"
+	android:drawableRight="@drawable/egged"
+	android:textSize="6pt"
+	android:text="@android:string/search_go"/>
+	<Button
+	android:layout_width="fill_parent"
+	android:id="@+id/submit_busgovil"
+	android:layout_weight="1"
+	android:drawableRight="@drawable/mot"
+	android:textSize="6pt" android:layout_height="fill_parent" android:text="@android:string/search_go"/>
+	<net.lutzky.transportdroidil.EnhancedTextView android:layout_weight="1" android:id="@+id/query_time" android:layout_height="wrap_content" android:completionHint="@string/query_time_hint" android:layout_width="fill_parent" android:text="@string/query_time_hint" android:singleLine="true" android:selectAllOnFocus="true" android:ellipsize="start" android:hint="@string/query_time_hint" android:imeOptions="actionSearch">
+	</net.lutzky.transportdroidil.EnhancedTextView>		
+</LinearLayout>
+</LinearLayout>

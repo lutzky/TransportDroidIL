@@ -1,12 +1,12 @@
 package net.lutzky.transportdroidil;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,29 +14,25 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TransportDroidIL extends Activity {
-	private static final String SEPARATOR = "\n";
-
+	private static final String TAG = "TransportDroidIL"; 
+	
 	private String lastResult;
 	private Exception lastException;
 
-	private static final int MAX_HISTORY = 10000;
-
 	private void setButtonsEnabled(boolean enabled) {
-		Button submit_egged = (Button) findViewById(R.id.submit_egged);
-		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
+		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 
-		submit_egged.setEnabled(enabled);
-		submit_busgovil.setEnabled(enabled);
+		queryView.setButtonsEnabled(enabled);
 	}
 
 	private void updateResultText(String result) {
@@ -49,7 +45,7 @@ public class TransportDroidIL extends Activity {
 	
 	private void getLocation() {
 		Triangulator t = new Triangulator(this);
-		final EditText queryEditText = (EditText) findViewById(R.id.query);
+		final EnhancedTextView queryEditText = (EnhancedTextView) findViewById(R.id.query_from);
 
 		t.getLocation(10 * 1000, new LocationListener() {
 			@Override
@@ -121,12 +117,12 @@ public class TransportDroidIL extends Activity {
 			}
 		};
 
-		EditText queryEditText = (EditText) findViewById(R.id.query);
-		final String query = queryEditText.getText().toString();
-
 		setButtonsEnabled(false);
 
-		addCompletionOption(query);
+		QueryView queryView = (QueryView) findViewById(R.id.queryview);
+		final String query = queryView.getQueryString();
+		
+		Log.d(TAG, "Querying: " + query);
 
 		Thread t = new Thread() {
 			@Override
@@ -152,92 +148,66 @@ public class TransportDroidIL extends Activity {
 
 		getLocation();
 
-		Button submit_egged = (Button) findViewById(R.id.submit_egged);
-		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
-
-		submit_egged.setOnClickListener(new OnClickListener() {
+		QueryView queryView = (QueryView) findViewById(R.id.queryview);
+		updateGoButton();
+		queryView.loadPersistentState(getPreferences(0));
+		queryView.setOnSearchButtonClickListener(new OnSearchButtonClickListener() {
 			@Override
-			public void onClick(View arg0) {
-				runQuery(new EggedGetter());
+			public void onSearchButtonClick(View source, int provider) {
+				if (provider == R.id.submit_egged)
+					runQuery(new EggedGetter());
+				else if (provider == R.id.submit_busgovil)
+					runQuery(new BusGovIlGetter());
+					
 			}
 		});
-
-		submit_busgovil.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				runQuery(new BusGovIlGetter());
-			}
-		});
-
-		loadPreviousQueries();
-
-		AutoCompleteTextView query = (AutoCompleteTextView) findViewById(R.id.query);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				R.layout.list_item, this.completionOptions);
-		query.setAdapter(adapter);
 
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
 		tvQueryResult.setText(getPreferences(0).getString("Result", ""));
 	}
-
-	private void loadPreviousQueries() {
-		SharedPreferences settings = getPreferences(0);
-		String allQueries = settings.getString("Queries", "");
-		for (String query : allQueries.split(SEPARATOR)) {
-			completionOptions.add(query);
+	
+	@Override
+	protected void onPause() {
+		QueryView queryView = (QueryView) findViewById(R.id.queryview);
+		queryView.savePersistentState(getPreferences(0));
+		super.onPause();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.preferences:
+			openPreferences();
+			return true;
 		}
+		return false;
 	}
 
-	@SuppressWarnings("unchecked")
-	void addCompletionOption(String query) {
-		if (completionOptions.contains(query)) {
-			// No duplicates.
-			return;
-		}
-
-		// Add our completion to the actual active completions database
-		AutoCompleteTextView queryView = (AutoCompleteTextView) findViewById(R.id.query);
-		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) (queryView
-				.getAdapter());
-		arrayAdapter.add(query);
-
-		// Add our completion to the persistent storage
-		completionOptions.add(0, query);
-
-		SharedPreferences settings = getPreferences(0);
-		SharedPreferences.Editor editor = settings.edit();
-		StringBuilder buffer = new StringBuilder(completionOptions.size());
-		List<String> toSave = uniqueBoundedList(completionOptions, MAX_HISTORY);
-		for (String s : toSave) {
-			buffer.append(s);
-			buffer.append(SEPARATOR);
-		}
-		try {
-			buffer.deleteCharAt(buffer.length() - 1);
-		} catch (Exception e) {
-		}
-		editor.putString("Queries", buffer.toString());
-		editor.commit();
+	private void openPreferences() {
+		Intent intent = new Intent(this, Preferences.class);
+		startActivityForResult(intent, 0);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		updateGoButton();
 	}
 
-	static <E> List<E> uniqueBoundedList(List<E> l, int bound) {
-		List<E> result = new LinkedList<E>();
-
-		int count = 0;
-
-		for (E item : l) {
-			if (!result.contains(item)) {
-				result.add(item);
-				count += 1;
-			}
-
-			if (count == bound) {
-				return result;
-			}
-		}
-
-		return result;
+	private void updateGoButton() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		String provider = settings.getString("provider", "mot");
+		Log.d(TAG, "Got provider=" + provider + ", updating query view.");
+		getQueryView().setProvider(provider);
 	}
 
-	final List<String> completionOptions = new LinkedList<String>();
+	private QueryView getQueryView() {
+		return (QueryView) findViewById(R.id.queryview);
+	}
 }

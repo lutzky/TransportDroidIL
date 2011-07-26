@@ -1,43 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<AutoCompleteTextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:hint="@string/default_query"
-    android:id="@+id/query"
-    android:singleLine="true"
-/>
-<LinearLayout android:orientation="horizontal"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-<Button
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:text="@string/query_egged"
-	android:id="@+id/submit_egged"
-	android:layout_weight="1"
-	/>
-	<Button
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:text="@string/query_busgovil"
-	android:id="@+id/submit_busgovil"
-	android:layout_weight="1"
-	/>		
-</LinearLayout>
+    android:layout_height="fill_parent" android:layout_width="fill_parent">
 <ScrollView
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
-	<TextView
-		android:paddingRight="5sp"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:id="@+id/query_result"
-		android:textSize="20sp"
-	/>
+    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/linearLayout1">
+        <net.lutzky.transportdroidil.QueryView android:id="@+id/queryview" android:layout_width="fill_parent" android:layout_height="wrap_content"></net.lutzky.transportdroidil.QueryView>
+        <TextView android:layout_width="fill_parent" android:id="@+id/query_result" android:textSize="20sp" android:gravity="right" android:layout_height="wrap_content" android:paddingRight="5sp"></TextView>
+    </LinearLayout>
 </ScrollView>
 </LinearLayout>

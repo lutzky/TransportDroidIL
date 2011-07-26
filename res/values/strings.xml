@@ -3,9 +3,22 @@
     
     <string name="app_name">Transport Droid IL</string>
 <string name="default_query">מאיפה לאן ומתי ברצונך לנסוע?</string>
-<string name="query_egged">שאל את אגד</string>
-<string name="query_busgovil">שאל את משרד התחבורה</string>
+<string name="query_egged">אגד</string>
+<string name="query_busgovil">משרד התחבורה</string>
 
 <string name="error">לא הולך: %s</string>
 <string name="please_wait">אנא המתן</string>
+<string name="query_from_hint">המוצא לנסיעתך</string>
+<string name="query_to_hint">היעד שלך</string>
+<string name="query_time_hint">מתי? (לא חובה)</string>
+<string name="provider_pref">ספק המידע</string>
+<string-array name="providers_names">
+	<item>משרד התחבורה</item>
+	<item>אגד</item>
+</string-array>
+<string-array name="provider_values">
+    <item>mot</item>
+    <item>egged</item>
+</string-array>
+<string name="preferences">הגדרות</string>
 </resources>
