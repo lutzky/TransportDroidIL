@@ -38,8 +38,11 @@ public class TransportDroidIL extends Activity {
 
 	private void runQuery(final BusGetter bg) {
 		final Handler mHandler = new Handler();
-		final ProgressDialog dialog = ProgressDialog.show(this, "",
-				getString(R.string.please_wait));
+
+		QueryView queryView = (QueryView) findViewById(R.id.queryview);
+		final String query = queryView.getQueryString();
+
+		final ProgressDialog dialog = ProgressDialog.show(this, "", query);
 
 		final Runnable mUpdateResults = new Runnable() {
 			@Override
@@ -67,9 +70,6 @@ public class TransportDroidIL extends Activity {
 		};
 
 		setButtonsEnabled(false);
-
-		QueryView queryView = (QueryView) findViewById(R.id.queryview);
-		final String query = queryView.getQueryString();
 
 		Log.d(TAG, "Querying: " + query);
 
