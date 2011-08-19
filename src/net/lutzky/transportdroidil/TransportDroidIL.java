@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,7 +96,7 @@ public class TransportDroidIL extends Activity {
 		setContentView(R.layout.main);
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
-		updateGoButton();
+		applyPreferences();
 		queryView.loadPersistentState(getPreferences(0));
 		queryView.setOnSearchButtonClickListener(new OnSearchButtonClickListener() {
 			@Override
@@ -143,14 +144,24 @@ public class TransportDroidIL extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		updateGoButton();
+		applyPreferences();
 	}
 
-	private void updateGoButton() {
+	private void applyPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
 		String provider = settings.getString("provider", "mot");
 		Log.d(TAG, "Got provider=" + provider + ", updating query view.");
 		getQueryView().setProvider(provider);
+
+		TextView tv = (TextView)findViewById(R.id.query_result);
+
+		if (settings.getBoolean("rtl_fix", false)) {
+			tv.setGravity(Gravity.RIGHT);
+		}
+		else {
+			tv.setGravity(Gravity.NO_GRAVITY);
+		}
 	}
 
 	private QueryView getQueryView() {

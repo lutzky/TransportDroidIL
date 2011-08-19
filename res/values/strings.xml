@@ -22,4 +22,6 @@
 </string-array>
 <string name="preferences">הגדרות</string>
 <string name="my_location">המיקום שלי</string>
+<string name="rtl_fix">תיקון יישור לימין</string>
+<string name="rtl_fix_summary">שנה את הסימון בתיבה זו אם הטקסט מיושר לצד הלא-נכון</string>
 </resources>

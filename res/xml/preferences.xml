@@ -2,5 +2,6 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference android:key="provider" android:title="@string/provider_pref" android:entryValues="@array/provider_values" android:entries="@array/providers_names" android:defaultValue="mot"></ListPreference>
+    <CheckBoxPreference android:key="rtl_fix" android:summary="@string/rtl_fix_summary" android:title="@string/rtl_fix" android:defaultValue="false"></CheckBoxPreference>
     
 </PreferenceScreen>
