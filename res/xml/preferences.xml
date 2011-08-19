@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference android:key="provider" android:title="@string/provider_pref" android:entryValues="@array/provider_values" android:entries="@array/providers_names"></ListPreference>
+    <ListPreference android:key="provider" android:title="@string/provider_pref" android:entryValues="@array/provider_values" android:entries="@array/providers_names" android:defaultValue="mot"></ListPreference>
     
 </PreferenceScreen>
