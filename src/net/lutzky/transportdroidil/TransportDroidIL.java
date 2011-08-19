@@ -17,8 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TransportDroidIL extends Activity {
-	private static final String TAG = "TransportDroidIL"; 
-	
+	private static final String TAG = "TransportDroidIL";
+
 	private String lastResult;
 	private Exception lastException;
 
@@ -70,7 +70,7 @@ public class TransportDroidIL extends Activity {
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		final String query = queryView.getQueryString();
-		
+
 		Log.d(TAG, "Querying: " + query);
 
 		Thread t = new Thread() {
@@ -93,6 +93,7 @@ public class TransportDroidIL extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.main);
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -105,28 +106,28 @@ public class TransportDroidIL extends Activity {
 					runQuery(new EggedGetter());
 				else if (provider == R.id.submit_busgovil)
 					runQuery(new BusGovIlGetter());
-					
+
 			}
 		});
 
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
 		tvQueryResult.setText(getPreferences(0).getString("Result", ""));
 	}
-	
+
 	@Override
 	protected void onPause() {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		queryView.savePersistentState(getPreferences(0));
 		super.onPause();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -141,7 +142,7 @@ public class TransportDroidIL extends Activity {
 		Intent intent = new Intent(this, Preferences.class);
 		startActivityForResult(intent, 0);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		applyPreferences();
