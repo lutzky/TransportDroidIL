@@ -54,6 +54,10 @@ public class AutolocationTextView extends EnhancedTextView {
 		setState(State.SEARCHING);
 	}
 
+	public void markAsCustom() {
+		setState(State.CUSTOM);
+	}
+
 	private void setState(State state) {
 		this.state = state;
 		Log.d(TAG, "Setting state to " + state);

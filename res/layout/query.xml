@@ -25,12 +25,20 @@
       android:imeOptions="actionNext">
     </net.lutzky.transportdroidil.AutolocationTextView>
   </LinearLayout>
-  <net.lutzky.transportdroidil.EnhancedTextView
-    android:ellipsize="start" android:layout_height="wrap_content"
-    android:layout_width="fill_parent" android:hint="@string/query_to_hint"
-    android:selectAllOnFocus="true" android:completionThreshold="1"
-    android:completionHint="@string/query_to_hint" android:id="@+id/query_to"
-    android:imeOptions="actionNext" />
+  <LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent">
+    <ImageButton android:src="@android:drawable/ic_media_rew"
+      android:scaleType="fitCenter" android:cropToPadding="true"
+      android:id="@+id/reverse"
+      android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <net.lutzky.transportdroidil.EnhancedTextView
+      android:ellipsize="start" android:layout_height="wrap_content"
+      android:layout_width="fill_parent" android:hint="@string/query_to_hint"
+      android:selectAllOnFocus="true" android:completionThreshold="1"
+      android:completionHint="@string/query_to_hint" android:id="@+id/query_to"
+      android:imeOptions="actionNext" />
+  </LinearLayout>
   <LinearLayout android:orientation="horizontal"
     android:layout_width="fill_parent" android:layout_height="wrap_content">
     <Button android:layout_height="54px" android:layout_width="fill_parent"

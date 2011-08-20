@@ -53,13 +53,27 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 			}
 		});
 
-		final AutolocationTextView altv = (AutolocationTextView)findViewById(R.id.query_from);
+		final AutolocationTextView queryFrom = (AutolocationTextView)findViewById(R.id.query_from);
+		final EnhancedTextView queryTo = (EnhancedTextView)findViewById(R.id.query_to);
+
 		ImageButton locateMe = (ImageButton)findViewById(R.id.locate_me);
 		locateMe.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				altv.startSearch();
+				queryFrom.startSearch();
+			}
+		});
+
+		ImageButton reverse = (ImageButton)findViewById(R.id.reverse);
+		reverse.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				CharSequence temp = queryTo.getText();
+				queryTo.setText(queryFrom.getText());
+				queryFrom.setText(temp);
+				queryFrom.markAsCustom();
 			}
 		});
 
