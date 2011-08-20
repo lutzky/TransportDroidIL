@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,6 +24,10 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	private State state;
 	private final Triangulator triangulator;
+
+	// Starting search mode changes the text, but that's us - not the user, so
+	// don't count that as a reason to set state to CUSTOM again.
+	boolean ignoreTextChange = false;
 
 	private StateChangeCallback stateChangeListener = null;
 
@@ -61,7 +64,9 @@ public class AutolocationTextView extends EnhancedTextView {
 
 		switch (state) {
 		case SEARCHING:
+			ignoreTextChange = true;
 			setText(R.string.my_location);
+			ignoreTextChange = false;
 			setTextColor(getResources().getColor(R.color.auto_location));
 			getLocation();
 			break;
@@ -126,14 +131,11 @@ public class AutolocationTextView extends EnhancedTextView {
 	}
 
 	@Override
-	protected void onFocusChanged(boolean focused, int direction,
-			Rect previouslyFocusedRect) {
-		// Only call the super class method when we are not in automatic mode,
-		// to avoid saving the automatic string into the completion list.
-		if (focused) {
-			Log.d(TAG, "User focused us, setting state to CUSTOM");
+	protected void onTextChanged(CharSequence text, int start, int before, int after) {
+		if (!ignoreTextChange && hasFocus()) {
+			Log.d(TAG, "User changed text, setting state to CUSTOM");
 			setState(State.CUSTOM);
 		}
-		super.onFocusChanged(focused, direction, previouslyFocusedRect);
+		super.onTextChanged(text, start, before, after);
 	}
 }
