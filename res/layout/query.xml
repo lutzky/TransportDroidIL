@@ -42,14 +42,14 @@
 	android:layout_weight="1"
 	android:drawableRight="@drawable/egged"
 	android:textSize="6pt"
-	android:text="@android:string/search_go"/>
+	android:text="@string/search_go"/>
 	<Button
 	android:layout_height="54px"
 	android:layout_width="fill_parent"
 	android:id="@+id/submit_busgovil"
 	android:layout_weight="1"
 	android:drawableRight="@drawable/mot"
-	android:textSize="6pt" android:text="@android:string/search_go"/>
+	android:textSize="6pt" android:text="@string/search_go"/>
 	<net.lutzky.transportdroidil.EnhancedTextView android:layout_weight="1" android:id="@+id/query_time" android:layout_height="fill_parent" android:completionHint="@string/query_time_hint" android:layout_width="fill_parent" android:selectAllOnFocus="true" android:ellipsize="start" android:hint="@string/query_time_hint" android:imeOptions="actionSearch">
 	</net.lutzky.transportdroidil.EnhancedTextView>		
 </LinearLayout>
