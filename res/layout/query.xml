@@ -7,12 +7,10 @@
     android:layout_height="fill_parent">
     <net.lutzky.transportdroidil.AutolocationTextView
         android:ellipsize="start"
-        android:singleLine="true"
         android:layout_height="wrap_content" 
         android:layout_width="fill_parent" 
         android:hint="@string/query_from_hint"
         
-        android:text="@string/query_from_hint"
         android:selectAllOnFocus="true"
         
         android:completionThreshold="1"
@@ -24,14 +22,10 @@
     </net.lutzky.transportdroidil.AutolocationTextView>
     <net.lutzky.transportdroidil.EnhancedTextView
         android:ellipsize="start"
-        android:singleLine="true"
         android:layout_height="wrap_content" 
         android:layout_width="fill_parent" 
         android:hint="@string/query_to_hint"
-        
-        android:text="@string/query_to_hint"
         android:selectAllOnFocus="true"
-        
         android:completionThreshold="1"
         android:completionHint="@string/query_to_hint"
         
@@ -56,7 +50,7 @@
 	android:layout_weight="1"
 	android:drawableRight="@drawable/mot"
 	android:textSize="6pt" android:text="@android:string/search_go"/>
-	<net.lutzky.transportdroidil.EnhancedTextView android:layout_weight="1" android:id="@+id/query_time" android:layout_height="fill_parent" android:completionHint="@string/query_time_hint" android:layout_width="fill_parent" android:text="@string/query_time_hint" android:singleLine="true" android:selectAllOnFocus="true" android:ellipsize="start" android:hint="@string/query_time_hint" android:imeOptions="actionSearch">
+	<net.lutzky.transportdroidil.EnhancedTextView android:layout_weight="1" android:id="@+id/query_time" android:layout_height="fill_parent" android:completionHint="@string/query_time_hint" android:layout_width="fill_parent" android:selectAllOnFocus="true" android:ellipsize="start" android:hint="@string/query_time_hint" android:imeOptions="actionSearch">
 	</net.lutzky.transportdroidil.EnhancedTextView>		
 </LinearLayout>
 </LinearLayout>
