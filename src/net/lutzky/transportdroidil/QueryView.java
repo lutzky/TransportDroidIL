@@ -24,7 +24,7 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	public QueryView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		inflate(context, R.layout.query, this);
-		
+
 		ArrayAdapter<String> placesAdapter = new ArrayAdapter<String>(context,
 				R.layout.list_item);
 		ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(context,
@@ -32,13 +32,13 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		getFromTextView().setAdapter(placesAdapter);
 		getToTextView().setAdapter(placesAdapter);
 		getTimeTextView().setAdapter(timeAdapter);
-		
+
 		// Share the list of completion options.
 		getToTextView().setCompletionOptions(getFromTextView().getCompletionOptions());
 
 		final Button submit_egged = (Button) findViewById(R.id.submit_egged);
 		final Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
-		
+
 		getTimeTextView().setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int action, KeyEvent event) {
@@ -66,13 +66,13 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		submit_egged.setOnClickListener(this);
 		submit_busgovil.setOnClickListener(this);
 	}
-	
+
 	public void savePersistentState(SharedPreferences settings) {
 		getFromTextView().savePersistentState(settings);
 		// Not called for to because its shared with from.
 		getTimeTextView().savePersistentState(settings);
 	}
-	
+
 	public void loadPersistentState(SharedPreferences settings) {
 		getFromTextView().loadPersistentState(settings);
 		// Not called for to because its shared with from.
@@ -83,10 +83,10 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		String from = getFromTextView().getString();
 		String to = getToTextView().getString();
 		String time = getTimeTextView().getString();
-		
+
 		return from + " ל" + to + " " + time;
 	}
-	
+
 	public void setButtonsEnabled(boolean enabled) {
 		Button submit_egged = (Button) findViewById(R.id.submit_egged);
 		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
@@ -94,22 +94,22 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		submit_egged.setEnabled(enabled);
 		submit_busgovil.setEnabled(enabled);
 	}
-	
+
 	EnhancedTextView getFromTextView() {
 		return (EnhancedTextView) findViewById(R.id.query_from);
 	}
-	
+
 	EnhancedTextView getToTextView() {
 		return (EnhancedTextView) findViewById(R.id.query_to);
 	}
-	
+
 	EnhancedTextView getTimeTextView() {
 		return (EnhancedTextView) findViewById(R.id.query_time);
 	}
 
 	public void setProvider(String provider) {
-		Button motButton = (Button) findViewById(R.id.submit_busgovil), 
-			   eggedButton = (Button) findViewById(R.id.submit_egged);  
+		Button motButton = (Button) findViewById(R.id.submit_busgovil),
+			   eggedButton = (Button) findViewById(R.id.submit_egged);
 		if (provider.equals("mot")) {
 			motButton.setVisibility(VISIBLE);
 			eggedButton.setVisibility(GONE);

@@ -35,7 +35,7 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
+
 		if (isInEditMode())
 			triangulator = null;
 		else
@@ -51,7 +51,7 @@ public class AutolocationTextView extends EnhancedTextView {
 	public void startSearch() {
 		setState(State.SEARCHING);
 	}
-	
+
 	private void setState(State state) {
 		this.state = state;
 		Log.d(TAG, "Setting state to " + state);
@@ -76,7 +76,7 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	private void getLocation() {
 		if (triangulator == null) return;
-		
+
 		triangulator.getLocation(10 * 1000, new LocationListener() {
 			@Override
 			public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -84,7 +84,7 @@ public class AutolocationTextView extends EnhancedTextView {
 			public void onProviderEnabled(String provider) {}
 			@Override
 			public void onProviderDisabled(String provider) {}
-			
+
 			@Override
 			public void onLocationChanged(Location location) {
 				Log.d(TAG, "Location changed: " + location);
@@ -111,7 +111,7 @@ public class AutolocationTextView extends EnhancedTextView {
 			}
 		});
 	}
-	
+
 	private static String addressToQueryString(Address address) {
 		if (address == null)
 			return "";
