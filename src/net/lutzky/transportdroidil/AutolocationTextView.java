@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
@@ -63,14 +62,14 @@ public class AutolocationTextView extends EnhancedTextView {
 		switch (state) {
 		case SEARCHING:
 			setText(R.string.my_location);
-			setTextColor(Color.BLUE); // TODO put in a resource.
+			setTextColor(getResources().getColor(R.color.auto_location));
 			getLocation();
 			break;
 		case FOUND:
-			setTextColor(Color.BLUE);
+			setTextColor(getResources().getColor(R.color.auto_location));
 			break;
 		case CUSTOM:
-			setTextColor(Color.BLACK); // TODO find the default text color somewhere.
+			setTextColor(getResources().getColor(android.R.color.primary_text_light));
 		}
 	}
 

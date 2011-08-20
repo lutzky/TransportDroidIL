@@ -22,4 +22,5 @@
 <string name="rtl_fix">תיקון יישור לימין</string>
 <string name="rtl_fix_summary">שנה את הסימון בתיבה זו אם הטקסט מיושר לצד הלא-נכון</string>
 <string name="search_go">שאל</string>
+<color name="auto_location">#3F8CD9</color>
 </resources>
