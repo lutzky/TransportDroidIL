@@ -9,11 +9,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class QueryView extends LinearLayout implements View.OnClickListener {
-	private OnSearchButtonClickListener onSearchButtonClickListener = null; 
+	private OnSearchButtonClickListener onSearchButtonClickListener = null;
 
 	public void setOnSearchButtonClickListener(
 			OnSearchButtonClickListener onSearchButtonClickListener) {
@@ -51,7 +52,17 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 				return false;
 			}
 		});
-		
+
+		final AutolocationTextView altv = (AutolocationTextView)findViewById(R.id.query_from);
+		ImageButton locateMe = (ImageButton)findViewById(R.id.locate_me);
+		locateMe.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				altv.startSearch();
+			}
+		});
+
 		submit_egged.setOnClickListener(this);
 		submit_busgovil.setOnClickListener(this);
 	}

@@ -1,5 +1,6 @@
 package net.lutzky.transportdroidil;
 
+import net.lutzky.transportdroidil.AutolocationTextView.State;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -110,8 +112,31 @@ public class TransportDroidIL extends Activity {
 			}
 		});
 
+		AutolocationTextView altv = (AutolocationTextView)findViewById(R.id.query_from);
+		altv.onStateChange(new AutolocationTextView.StateChangeCallback() {
+			@Override
+			public void stateHasChanged(State newState) {
+				updateLocationProgress(newState);
+			}
+		});
+
+		updateLocationProgress(altv.getState());
+
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
 		tvQueryResult.setText(getPreferences(0).getString("Result", ""));
+	}
+
+	private void updateLocationProgress(AutolocationTextView.State state) {
+		Log.d(TAG, "Updating location progress with state " + state);
+		ProgressBar locationProgress = (ProgressBar)findViewById(R.id.location_progress);
+		switch(state) {
+		case SEARCHING:
+			locationProgress.setVisibility(View.VISIBLE);
+			break;
+		default:
+			locationProgress.setVisibility(View.GONE);
+			break;
+		}
 	}
 
 	@Override

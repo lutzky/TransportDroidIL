@@ -16,13 +16,23 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 public class AutolocationTextView extends EnhancedTextView {
+	public interface StateChangeCallback {
+		public void stateHasChanged(State newState);
+	}
+
 	private final static String TAG = "AutolocationTextView";
-	
-	private static enum State { SEARCHING, FOUND, CUSTOM }
-	
+
+	public static enum State { SEARCHING, FOUND, CUSTOM }
+
 	private State state;
 	private final Triangulator triangulator;
-	
+
+	private StateChangeCallback stateChangeListener = null;
+
+	public State getState() {
+		return state;
+	}
+
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
@@ -30,12 +40,26 @@ public class AutolocationTextView extends EnhancedTextView {
 			triangulator = null;
 		else
 			triangulator = new Triangulator(context);
-		
+
+		startSearch();
+	}
+
+	public void onStateChange(StateChangeCallback cb) {
+		stateChangeListener = cb;
+	}
+
+	public void startSearch() {
 		setState(State.SEARCHING);
 	}
 	
 	private void setState(State state) {
 		this.state = state;
+		Log.d(TAG, "Setting state to " + state);
+
+		if (stateChangeListener != null) {
+			stateChangeListener.stateHasChanged(state);
+		}
+
 		switch (state) {
 		case SEARCHING:
 			setText(R.string.my_location);
@@ -71,6 +95,10 @@ public class AutolocationTextView extends EnhancedTextView {
 				try {
 					addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 					if (addresses.size() > 0) {
+						if (state == State.CUSTOM) {
+							Log.i(TAG, "Found location, but state is custom, so dropping it.");
+							return;
+						}
 						String addressString = addressToQueryString(addresses.get(0));
 						setText(addressString);
 						setState(State.FOUND); // After setText, since it activates the onTextChanged handler, and had set state to CUSTOM.
@@ -97,21 +125,16 @@ public class AutolocationTextView extends EnhancedTextView {
 			result += " " + secondLine;
 		return result;
 	}
-	
+
 	@Override
 	protected void onFocusChanged(boolean focused, int direction,
 			Rect previouslyFocusedRect) {
 		// Only call the super class method when we are not in automatic mode,
 		// to avoid saving the automatic string into the completion list.
-		if (state == State.CUSTOM)
-			super.onFocusChanged(focused, direction, previouslyFocusedRect);
+		if (focused) {
+			Log.d(TAG, "User focused us, setting state to CUSTOM");
+			setState(State.CUSTOM);
+		}
+		super.onFocusChanged(focused, direction, previouslyFocusedRect);
 	}
-	
-	@Override
-	protected void onTextChanged(CharSequence text, int start, int before,
-			int after) {
-		setState(State.CUSTOM);
-		super.onTextChanged(text, start, before, after);
-	}
-
 }
