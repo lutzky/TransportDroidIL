@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -30,6 +32,23 @@ public class EnhancedTextView extends AutoCompleteTextView {
 			Log.w(TAG, "No preferences_field_name attribute, auto complete will not be persistent.");
 	}
 	
+	/*
+	 * Usually, for non-single-line TextEdit views, the IME action is
+	 * disabled. However, single-line TextEdit views have a bug with many ROMs
+	 * that causes them not to show Hebrew hints. This @Override causes the
+	 * IME action to show up anyway, if it is selected.
+	 */
+	@Override
+	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+	    InputConnection connection = super.onCreateInputConnection(outAttrs);
+	    int imeAction = outAttrs.imeOptions & EditorInfo.IME_MASK_ACTION;
+	    if (imeAction != EditorInfo.IME_ACTION_NONE && imeAction != EditorInfo.IME_ACTION_UNSPECIFIED) {
+	        outAttrs.imeOptions &= ~EditorInfo.IME_FLAG_NO_ENTER_ACTION;
+	    }
+
+	    return connection;
+	}
+
 	/**
 	 * Set the list used to save completion options.
 	 * Notice that the list is not copied but used as reference!
