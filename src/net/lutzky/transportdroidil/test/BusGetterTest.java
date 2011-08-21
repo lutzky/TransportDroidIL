@@ -27,8 +27,7 @@ public class BusGetterTest extends TestCase {
 		assertSaneResult(bg.getFilteredResult());
 	}
 	
-	public void testMotInteraction() throws Throwable {
-		BusGetter bg = new BusGovIlGetter();
+	public void testInteraction(BusGetter bg) throws Throwable {
 		bg.runQuery("ירושלים לתל אביב");
 		Spanned result = bg.getFilteredResult();
 		ClickableSpan[] spans = result.getSpans(0, result.length(), ClickableSpan.class);
@@ -36,5 +35,13 @@ public class BusGetterTest extends TestCase {
 		bg.runQuery("", 1);
 		result = bg.getFilteredResult();
 		assertSaneResult(result);
+	}
+	
+	public void testMotInteraction() throws Throwable {
+		testInteraction(new BusGovIlGetter());
+	}
+	
+	public void testEggedInteraction() throws Throwable {
+		testInteraction(new EggedGetter());
 	}
 }
