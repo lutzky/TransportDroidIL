@@ -9,7 +9,7 @@ public class BusGovIlGetter extends BusGetter {
 	String getQueryJson(String query) throws JSONException {
 		JSONObject jsonQuery = new JSONObject();
 		jsonQuery.put("sParams", query);
-		jsonQuery.put("strSession", session);
+		jsonQuery.put("strSession", "0");
 		return jsonQuery.toString();
 	}
 	
@@ -17,7 +17,7 @@ public class BusGovIlGetter extends BusGetter {
 	String getQueryJson(int interactionIndex) throws JSONException {
 		JSONObject jsonQuery = new JSONObject();
 		jsonQuery.put("sParams", interactionIndex);
-		jsonQuery.put("strSession", session);
+		jsonQuery.put("strSession", "0");
 		return jsonQuery.toString();
 	}
 

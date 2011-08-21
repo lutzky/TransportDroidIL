@@ -2,15 +2,15 @@ package net.lutzky.transportdroidil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -39,57 +39,52 @@ public abstract class BusGetter {
 	private String htmlResult = null;
 	private Spanned filteredResult = null;
 	
-	public BusGetter() {
-		newSession();
-	}
+	private final DefaultHttpClient httpclient = new DefaultHttpClient();
+	private boolean hasSessionCookies = false;
 	
 	public interface InteractiveLinkClicked {
 		void onInteractiveLinkClicked(BusGetter bg, int index);
 	}
 	
 	private InteractiveLinkClicked interactiveLinkedClicked = null;
-	protected String session = "", cookie = "";
 
 	public void runQuery(String query) throws IOException, JSONException {
 		runQuery(query, 0);
 	}
 	
 	public void runQuery(String query, int interactionIndex) throws IOException, JSONException {
-		URL url = new URL(getUrl());
-
-		HttpURLConnection hurl = (HttpURLConnection) url.openConnection();
-		hurl.setRequestMethod("POST");
-		hurl.setDoOutput(true);
+		if (!hasSessionCookies) {
+			newSession();
+			hasSessionCookies = true;
+		}
+		
+		HttpPost httppost = new HttpPost(getUrl());
 
 		String appropriateReferer = getAppropriateReferer();
 		if (appropriateReferer != null) {
-			hurl.setRequestProperty("Referer", appropriateReferer);
+			httppost.setHeader("Referer", appropriateReferer);
 		}
-
-		hurl.setRequestProperty("Accept-Charset", "utf-8");
-		hurl.setRequestProperty("Content-Type",
-				"application/json; charset=utf-8");
-		hurl.setRequestProperty("Cookie", cookie);
-
-		OutputStreamWriter wr = new OutputStreamWriter(hurl.getOutputStream());
 
 		String jsonQuery;
 		if (interactionIndex == 0)
 			jsonQuery = getQueryJson(query);
 		else
 			jsonQuery = getQueryJson(interactionIndex);
-		wr.write(jsonQuery);
+		StringEntity entity = new StringEntity(jsonQuery, "utf-8");
+		entity.setContentType("application/json; charset=utf-8");
+		httppost.setEntity(entity);
 		Log.d(TAG, "Sending JSON query: " + jsonQuery);
+		
+		HttpResponse response = httpclient.execute(httppost);
 
-		wr.flush();
-
-		if (hurl.getResponseCode() != 200) {
-			throw new IOException("" + hurl.getResponseCode() + " " + hurl.getResponseMessage());
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new IOException("" + response.getStatusLine());
 		}
 
 		// We're only expecting one line of input anyway.
-		rawResult = (new BufferedReader(new InputStreamReader(hurl
-				.getInputStream()))).readLine();
+		rawResult = (new BufferedReader(new InputStreamReader(response.getEntity().getContent()))).readLine();
+		htmlResult = null;
+		filteredResult = null;
 	}
 
 	public String getRawResult() {
@@ -179,48 +174,17 @@ public abstract class BusGetter {
 	public InteractiveLinkClicked getInteractiveLinkedClicked() {
 		return interactiveLinkedClicked;
 	}
+	
+	private void newSession() throws IOException {
+		HttpGet httpget = new HttpGet(getAppropriateReferer());
+		HttpResponse response = httpclient.execute(httpget);
 
-	private String randomSession() {
-		StringBuilder b = new StringBuilder(getSessionPrefix());
-		Random r = new Random();
-		for (int i = 0; i < 25; ++i) {
-			int randomChar = r.nextInt(36);
-			char c;
-			if (randomChar < 10)
-				c = (char) ('0' + randomChar);
-			else
-				c = (char) ('a' + randomChar - 10);
-			b.append(c);
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new IOException("" + response.getStatusLine());
 		}
 		
-		return b.toString();
-	}
-	
-	private void newSession() {
-		try {
-			URL url = new URL(getAppropriateReferer());
-	
-			HttpURLConnection hurl = (HttpURLConnection) url.openConnection();
-			hurl.setRequestMethod("GET");
-	
-			hurl.setRequestProperty("Accept-Charset", "utf-8");
-			hurl.setRequestProperty("Content-Type",
-					"text/html; charset=utf-8");
-			
-			if (hurl.getResponseCode() != 200) {
-				throw new IOException("" + hurl.getResponseCode() + " " + hurl.getResponseMessage());
-			}
-			
-			Scanner scanner = new Scanner(hurl.getInputStream());
-			scanner.findWithinHorizon("<input name=\"hidSessioId\" type=\"hidden\" id=\"hidSessioId\" value=\"(.*)\" />", 0);
-			MatchResult m = scanner.match();
-			session = m.group(1);
-			cookie = hurl.getHeaderField("Set-Cookie");
-			Log.d(TAG, "Session: " + session);
-			Log.d(TAG, "Cookie: " + cookie);
-		}
-		catch (IOException e) {
-			Log.d(TAG, "Exception trying to create a session.");
-		}
+		HttpEntity entity = response.getEntity();
+		if (entity != null)
+			entity.consumeContent();
 	}
 }

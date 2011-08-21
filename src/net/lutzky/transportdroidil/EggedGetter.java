@@ -10,7 +10,7 @@ public class EggedGetter extends BusGetter {
 	String getQueryJson(String query) throws JSONException {
 		JSONObject jsonQuery = new JSONObject();
 		jsonQuery.put("str1", query);
-		jsonQuery.put("strSession", session);
+		jsonQuery.put("strSession", "0");
 		return jsonQuery.toString();
 	}
 	
@@ -18,7 +18,7 @@ public class EggedGetter extends BusGetter {
 	String getQueryJson(int interactionIndex) throws JSONException {
 		JSONObject jsonQuery = new JSONObject();
 		jsonQuery.put("str1", interactionIndex);
-		jsonQuery.put("strSession", session);
+		jsonQuery.put("strSession", "0");
 		return jsonQuery.toString();
 	}
 
