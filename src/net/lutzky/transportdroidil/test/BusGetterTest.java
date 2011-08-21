@@ -1,6 +1,7 @@
 package net.lutzky.transportdroidil.test;
 
 import android.text.Spanned;
+import android.text.style.ClickableSpan;
 import net.lutzky.transportdroidil.BusGetter;
 import net.lutzky.transportdroidil.BusGovIlGetter;
 import net.lutzky.transportdroidil.EggedGetter;
@@ -24,5 +25,16 @@ public class BusGetterTest extends TestCase {
 		assertSaneResult(bg.getFilteredResult());
 		bg.runQuery("צומת ג'למה לחיפה");
 		assertSaneResult(bg.getFilteredResult());
+	}
+	
+	public void testMotInteraction() throws Throwable {
+		BusGetter bg = new BusGovIlGetter();
+		bg.runQuery("ירושלים לתל אביב");
+		Spanned result = bg.getFilteredResult();
+		ClickableSpan[] spans = result.getSpans(0, result.length(), ClickableSpan.class);
+		assertEquals(2, spans.length);
+		bg.runQuery("", 1);
+		result = bg.getFilteredResult();
+		assertSaneResult(result);
 	}
 }
