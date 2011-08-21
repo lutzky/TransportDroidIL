@@ -1,5 +1,6 @@
 package net.lutzky.transportdroidil.test;
 
+import android.text.Spanned;
 import net.lutzky.transportdroidil.BusGetter;
 import net.lutzky.transportdroidil.BusGovIlGetter;
 import net.lutzky.transportdroidil.EggedGetter;
@@ -7,8 +8,8 @@ import junit.framework.TestCase;
 
 public class BusGetterTest extends TestCase {
 	
-	private void assertSaneResult(String result) {
-		assertTrue("Result was " + result, result.indexOf("קו") > 0);
+	private void assertSaneResult(Spanned result) {
+		assertTrue("Result was " + result, result.toString().indexOf("קו") > 0);
 	}
 	public void testEggedQuery() throws Throwable {
 		BusGetter bg = new EggedGetter();
