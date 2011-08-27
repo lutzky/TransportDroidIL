@@ -33,9 +33,6 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		getToTextView().setAdapter(placesAdapter);
 		getTimeTextView().setAdapter(timeAdapter);
 
-		// Share the list of completion options.
-		getToTextView().setCompletionOptions(getFromTextView().getCompletionOptions());
-
 		final Button submit_egged = (Button) findViewById(R.id.submit_egged);
 		final Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
 
@@ -100,9 +97,9 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	}
 
 	public String getQueryString() {
-		String from = getFromTextView().getString();
-		String to = getToTextView().getString();
-		String time = getTimeTextView().getString();
+		String from = getFromTextView().getText().toString();
+		String to = getToTextView().getText().toString();
+		String time = getTimeTextView().getText().toString();
 
 		return from + " ל" + to + " " + time;
 	}
