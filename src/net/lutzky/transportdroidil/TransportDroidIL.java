@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,12 +130,15 @@ public class TransportDroidIL extends Activity {
 	private void updateLocationProgress(AutolocationTextView.State state) {
 		Log.d(TAG, "Updating location progress with state " + state);
 		ProgressBar locationProgress = (ProgressBar)findViewById(R.id.location_progress);
+		ImageButton locateMe = (ImageButton)findViewById(R.id.locate_me);
 		switch(state) {
 		case SEARCHING:
 			locationProgress.setVisibility(View.VISIBLE);
+			locateMe.setVisibility(View.GONE);
 			break;
 		default:
 			locationProgress.setVisibility(View.GONE);
+			locateMe.setVisibility(View.VISIBLE);
 			break;
 		}
 	}

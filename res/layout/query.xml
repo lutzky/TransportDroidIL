@@ -11,11 +11,13 @@
     <ImageButton android:src="@android:drawable/ic_menu_mylocation"
       android:scaleType="fitCenter" android:cropToPadding="true"
       android:padding="1dp" android:id="@+id/locate_me"
-      android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    <ProgressBar android:layout_height="wrap_content"
+      android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    <ProgressBar
+      android:layout_height="fill_parent"
+      android:layout_width="wrap_content"
       android:visibility="visible" android:id="@+id/location_progress"
-      android:layout_gravity="center_vertical" android:layout_width="wrap_content"
-      style="@android:style/Widget.ProgressBar.Small" />
+      android:layout_gravity="center_vertical"
+      />
     <net.lutzky.transportdroidil.AutolocationTextView
       android:ellipsize="start" android:layout_height="fill_parent"
       android:layout_width="fill_parent" android:hint="@string/query_from_hint"
