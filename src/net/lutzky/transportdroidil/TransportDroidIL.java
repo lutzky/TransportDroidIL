@@ -194,6 +194,21 @@ public class TransportDroidIL extends Activity {
 		else {
 			tv.setGravity(Gravity.NO_GRAVITY);
 		}
+
+		if (settings.getBoolean("clear_completions", false)) {
+			Log.i(TAG, "User requested a history clear");
+
+			getQueryView().clearCompletionOptions(settings);
+
+			Toast toast = Toast.makeText(getApplicationContext(),
+					R.string.clear_completions_toast, Toast.LENGTH_LONG);
+			toast.show();
+
+			// Reset the relevant preference, so the user can set it again
+			SharedPreferences.Editor e = settings.edit();
+			e.putBoolean("clear_completions", false);
+			e.commit();
+		}
 	}
 
 	private QueryView getQueryView() {

@@ -93,6 +93,12 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		getTimeTextView().loadPersistentState(settings);
 	}
 
+	public void clearCompletionOptions(SharedPreferences settings) {
+		getFromTextView().clearCompletionOptions(settings);
+		// Not called for to because its shared with from.
+		getTimeTextView().clearCompletionOptions(settings);
+	}
+
 	public String getQueryString() {
 		String from = getFromTextView().getString();
 		String to = getToTextView().getString();

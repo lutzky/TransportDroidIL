@@ -88,6 +88,14 @@ public class EnhancedTextView extends AutoCompleteTextView {
 		super.onFocusChanged(focused, direction, previouslyFocusedRect);
 	}
 
+	public void clearCompletionOptions(SharedPreferences settings) {
+		completionOptions.clear();
+		savePersistentState(settings);
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>)getAdapter();
+		arrayAdapter.clear();
+	}
+
 	public void savePersistentState(SharedPreferences settings) {
 		if (preferencesFieldName == null)
 			return;
