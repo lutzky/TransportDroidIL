@@ -75,11 +75,13 @@ public class EnhancedTextView extends AutoCompleteTextView {
 	public void addCurrentValueAsCompletion() {
 		String s = getText().toString();
 
-		if (completionOptions.contains(s)) {
-			// No duplicates.
-			// TODO move to front
-			return;
+		// If the completion was already there, remove and re-add it. This way,
+		// it gets moved to the front.
+		int previousLocation = completionOptions.indexOf(s);
+		if (previousLocation != -1) {
+			completionOptions.remove(previousLocation);
 		}
+
 		if (s.equals(getHint()))
 			return;
 
