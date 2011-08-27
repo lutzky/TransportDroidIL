@@ -135,10 +135,12 @@ public class TransportDroidIL extends Activity {
 		case SEARCHING:
 			locationProgress.setVisibility(View.VISIBLE);
 			locateMe.setVisibility(View.GONE);
+			setButtonsEnabled(false);
 			break;
 		default:
 			locationProgress.setVisibility(View.GONE);
 			locateMe.setVisibility(View.VISIBLE);
+			setButtonsEnabled(true);
 			break;
 		}
 	}
