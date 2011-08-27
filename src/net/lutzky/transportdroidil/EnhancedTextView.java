@@ -66,26 +66,30 @@ public class EnhancedTextView extends AutoCompleteTextView {
 	protected void onFocusChanged(boolean focused, int direction,
 			Rect previouslyFocusedRect) {
 		if (!focused) {
-			String s = getText().toString();
-			
-			if (completionOptions.contains(s)) {
-				// No duplicates.
-				// TODO move to front
-				return;
-			}
-			if (s.equals(getHint()))
-				return;
-	
-			// Add our completion to the actual active completions database
-			@SuppressWarnings("unchecked")
-			ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) getAdapter();
-			arrayAdapter.add(s);
-	
-			// Add our completion to our non-persistent storage
-			completionOptions.add(0, s);
+			addCurrentValueAsCompletion();
 		}
 		
 		super.onFocusChanged(focused, direction, previouslyFocusedRect);
+	}
+
+	public void addCurrentValueAsCompletion() {
+		String s = getText().toString();
+
+		if (completionOptions.contains(s)) {
+			// No duplicates.
+			// TODO move to front
+			return;
+		}
+		if (s.equals(getHint()))
+			return;
+
+		// Add our completion to the actual active completions database
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) getAdapter();
+		arrayAdapter.add(s);
+
+		// Add our completion to our non-persistent storage
+		completionOptions.add(0, s);
 	}
 
 	public void clearCompletionOptions(SharedPreferences settings) {
