@@ -141,6 +141,10 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	public void onClick(View v) {
 		final InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
+		getFromTextView().addCurrentValueAsCompletion();
+		getToTextView().addCurrentValueAsCompletion();
+		getTimeTextView().addCurrentValueAsCompletion();
+
 		if (onSearchButtonClickListener != null) {
 			imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
 			onSearchButtonClickListener.onSearchButtonClick(QueryView.this, v.getId());

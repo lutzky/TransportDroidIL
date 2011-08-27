@@ -2,7 +2,6 @@ package net.lutzky.transportdroidil;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
@@ -43,16 +42,6 @@ public class EnhancedTextView extends AutoCompleteTextView {
 	    }
 
 	    return connection;
-	}
-
-	@Override
-	protected void onFocusChanged(boolean focused, int direction,
-			Rect previouslyFocusedRect) {
-		if (!focused) {
-			addCurrentValueAsCompletion();
-		}
-		
-		super.onFocusChanged(focused, direction, previouslyFocusedRect);
 	}
 
 	public void addCurrentValueAsCompletion() {
