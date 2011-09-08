@@ -161,7 +161,7 @@ public class AutolocationTextView extends EnhancedTextView {
 		firstLine = firstLine.replaceFirst("(\\d+)-(\\d+)", "\\1");
 		String result = firstLine;
 		final String secondLine = address.getAddressLine(1);
-		if (secondLine != null)
+		if (secondLine != null && address.getMaxAddressLineIndex() > 1)
 			result += " " + secondLine;
 		return result;
 	}
