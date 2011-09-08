@@ -23,4 +23,7 @@
 <string name="rtl_fix_summary">שנה את הסימון בתיבה זו אם הטקסט מיושר לצד הלא-נכון</string>
 <string name="search_go">שאל</string>
 <color name="auto_location">#3F8CD9</color>
+<string name="clear_completions">נקה השלמות אוטומטיות</string>
+<string name="clear_completions_summary">סמן כדי לנקות כעת את הזכרון מהשלמות אוטומטיות למיקום ולזמן</string>
+<string name="clear_completions_toast">ההשלמות האוטומטיות נוקו מהזכרון</string>
 </resources>

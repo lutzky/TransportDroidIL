@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -141,12 +142,17 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	private void updateLocationProgress(AutolocationTextView.State state) {
 		Log.d(TAG, "Updating location progress with state " + state);
 		ProgressBar locationProgress = (ProgressBar)findViewById(R.id.location_progress);
+		ImageButton locateMe = (ImageButton)findViewById(R.id.locate_me);
 		switch(state) {
 		case SEARCHING:
 			locationProgress.setVisibility(View.VISIBLE);
+			locateMe.setVisibility(View.GONE);
+			setButtonsEnabled(false);
 			break;
 		default:
 			locationProgress.setVisibility(View.GONE);
+			locateMe.setVisibility(View.VISIBLE);
+			setButtonsEnabled(true);
 			break;
 		}
 	}
@@ -199,6 +205,21 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		}
 		else {
 			tv.setGravity(Gravity.NO_GRAVITY);
+		}
+
+		if (settings.getBoolean("clear_completions", false)) {
+			Log.i(TAG, "User requested a history clear");
+
+			getQueryView().clearCompletionOptions(settings);
+
+			Toast toast = Toast.makeText(getApplicationContext(),
+					R.string.clear_completions_toast, Toast.LENGTH_LONG);
+			toast.show();
+
+			// Reset the relevant preference, so the user can set it again
+			SharedPreferences.Editor e = settings.edit();
+			e.putBoolean("clear_completions", false);
+			e.commit();
 		}
 	}
 
