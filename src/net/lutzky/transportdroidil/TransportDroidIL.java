@@ -1,6 +1,7 @@
 package net.lutzky.transportdroidil;
 
 import net.lutzky.transportdroidil.AutolocationTextView.State;
+import net.lutzky.transportdroidil.BusGetter.InteractiveLinkClicked;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -8,6 +9,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -19,11 +23,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TransportDroidIL extends Activity {
+public class TransportDroidIL extends Activity implements InteractiveLinkClicked {
 	private static final String TAG = "TransportDroidIL";
 
-	private String lastResult;
+	private Spanned lastResult;
 	private Exception lastException;
+	
+	private final BusGovIlGetter motBg = new BusGovIlGetter();
+	private final EggedGetter eggedBg = new EggedGetter();
 
 	private void setButtonsEnabled(boolean enabled) {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -31,15 +38,15 @@ public class TransportDroidIL extends Activity {
 		queryView.setButtonsEnabled(enabled);
 	}
 
-	private void updateResultText(String result) {
+	private void updateResultText(Spanned result) {
 		SharedPreferences.Editor editor = getPreferences(0).edit();
-		editor.putString("Result", result);
+		editor.putString("Result", result.toString());
 		editor.commit();
 		TextView tv = (TextView)findViewById(R.id.query_result);
 		tv.setText(result);
 	}
 
-	private void runQuery(final BusGetter bg) {
+	private void runQuery(final BusGetter bg, final int interactionIndex) {
 		final Handler mHandler = new Handler();
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -74,13 +81,13 @@ public class TransportDroidIL extends Activity {
 
 		setButtonsEnabled(false);
 
-		Log.d(TAG, "Querying: " + query);
+		Log.d(TAG, "Querying: " + query + ", index = " + interactionIndex);
 
 		Thread t = new Thread() {
 			@Override
 			public void run() {
 				try {
-					bg.runQuery(query);
+					bg.runQuery(query, interactionIndex);
 					lastResult = bg.getFilteredResult();
 					mHandler.post(mUpdateResults);
 				} catch (Exception e) {
@@ -98,6 +105,9 @@ public class TransportDroidIL extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
+		
+		eggedBg.setInteractiveLinkedClicked(this);
+		motBg.setInteractiveLinkedClicked(this);
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		applyPreferences();
@@ -105,10 +115,11 @@ public class TransportDroidIL extends Activity {
 		queryView.setOnSearchButtonClickListener(new OnSearchButtonClickListener() {
 			@Override
 			public void onSearchButtonClick(View source, int provider) {
-				if (provider == R.id.submit_egged)
-					runQuery(new EggedGetter());
-				else if (provider == R.id.submit_busgovil)
-					runQuery(new BusGovIlGetter());
+				if (provider == R.id.submit_egged) {
+					runQuery(eggedBg, 0);
+				} else if (provider == R.id.submit_busgovil) {
+					runQuery(motBg, 0);
+				}
 
 			}
 		});
@@ -124,7 +135,8 @@ public class TransportDroidIL extends Activity {
 		updateLocationProgress(altv.getState());
 
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
-		tvQueryResult.setText(getPreferences(0).getString("Result", ""));
+		tvQueryResult.setText(Html.fromHtml(getPreferences(0).getString("Result", "")));
+		tvQueryResult.setMovementMethod(new LinkMovementMethod());
 	}
 
 	private void updateLocationProgress(AutolocationTextView.State state) {
@@ -213,5 +225,10 @@ public class TransportDroidIL extends Activity {
 
 	private QueryView getQueryView() {
 		return (QueryView) findViewById(R.id.queryview);
+	}
+
+	@Override
+	public void onInteractiveLinkClicked(BusGetter bg, int index) {
+		runQuery(bg, index);
 	}
 }
