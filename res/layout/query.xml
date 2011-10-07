@@ -8,9 +8,8 @@
   <LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="fill_parent">
-    <ImageButton android:src="@android:drawable/ic_menu_mylocation"
-      android:scaleType="fitCenter" android:cropToPadding="true"
-      android:padding="1dp" android:id="@+id/locate_me"
+    <ImageButton android:src="@drawable/location"
+      android:id="@+id/locate_me"
       android:layout_width="wrap_content" android:layout_height="fill_parent" />
     <ProgressBar
       android:layout_height="fill_parent"
@@ -30,7 +29,7 @@
   <LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="fill_parent">
-    <ImageButton android:src="@android:drawable/ic_media_rew"
+    <ImageButton android:src="@drawable/loopback"
       android:scaleType="fitCenter" android:cropToPadding="true"
       android:id="@+id/reverse"
       android:layout_width="wrap_content" android:layout_height="wrap_content" />
