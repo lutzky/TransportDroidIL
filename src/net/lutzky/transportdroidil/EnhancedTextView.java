@@ -21,6 +21,11 @@ public class EnhancedTextView extends AutoCompleteTextView {
 						 TAG = "EnhancedTextView",
 						 XMLNS = "http://transportdroidil.lutzky.net/apk/res/custom";
 
+	/*
+	 * completionOptions shouldn't really be necessary - we should've been
+	 * able to read the data via the ArrayAdapter - but it always looks empty
+	 * when you try to read it. Weird.
+	 */
 	List<String> completionOptions = new LinkedList<String>();
 	final String preferencesFieldName;
 	
@@ -62,25 +67,31 @@ public class EnhancedTextView extends AutoCompleteTextView {
 	}
 	
 	public void addCurrentValueAsCompletion() {
-		String s = getText().toString();
+		String s = getText().toString().trim();
+
+		if (s.equals("") || s.equals(getHint())) {
+			Log.d(TAG, "Ignoring empty completion value");
+			return;
+		}
+
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) getAdapter();
 
 		// If the completion was already there, remove and re-add it. This way,
 		// it gets moved to the front.
 		int previousLocation = completionOptions.indexOf(s);
 		if (previousLocation != -1) {
 			completionOptions.remove(previousLocation);
+			arrayAdapter.remove(s);
 		}
 
-		if (s.equals(getHint()))
-			return;
-
 		// Add our completion to the actual active completions database
-		@SuppressWarnings("unchecked")
-		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) getAdapter();
-		arrayAdapter.add(s);
+		arrayAdapter.insert(s, 0);
 
-		// Add our completion to our non-persistent storage
+		// Add our completion to our to-be-persistent storage
 		completionOptions.add(0, s);
+
+		Log.d(TAG, "Current completion options: " + completionOptions.toString());
 	}
 
 	public void clearCompletionOptions(SharedPreferences settings) {
@@ -107,6 +118,8 @@ public class EnhancedTextView extends AutoCompleteTextView {
 		} catch (Exception e) {
 		}
 		editor.putString(preferencesFieldName, buffer.toString());
+
+		Log.d(TAG, preferencesFieldName + ": Saving persistent state: " + buffer.toString());
 		editor.commit();
 	}
 	
@@ -137,6 +150,8 @@ public class EnhancedTextView extends AutoCompleteTextView {
 		for (String query : allQueries.split(SEPARATOR)) {
 			completionOptions.add(query);
 		}
+
+		Log.d(TAG, "Loaded persistent queries for " + preferencesFieldName + ": " + completionOptions.toString());
 		@SuppressWarnings("unchecked")
 		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>) getAdapter();
 		arrayAdapter.clear();
