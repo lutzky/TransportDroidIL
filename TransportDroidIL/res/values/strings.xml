@@ -26,4 +26,6 @@
 <string name="clear_completions">נקה השלמות אוטומטיות</string>
 <string name="clear_completions_summary">סמן כדי לנקות כעת את הזכרון מהשלמות אוטומטיות למיקום ולזמן</string>
 <string name="clear_completions_toast">ההשלמות האוטומטיות נוקו מהזכרון</string>
+<string name="bidi_numbers_fix">תיקון היפוך מספרים</string>
+<string name="bidi_numbers_fix_summary">שנה את הסימון בתיבה זו אם מספרים (קווים, שעות, תאריכים) מופיעים הפוך</string>
 </resources>

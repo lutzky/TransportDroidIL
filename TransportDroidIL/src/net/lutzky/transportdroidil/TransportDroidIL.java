@@ -40,6 +40,8 @@ public class TransportDroidIL extends Activity {
 	}
 
 	private void runQuery(final BusGetter bg) {
+		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
 		final Handler mHandler = new Handler();
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -82,6 +84,11 @@ public class TransportDroidIL extends Activity {
 				try {
 					bg.runQuery(query);
 					lastResult = bg.getFilteredResult();
+					if (settings.getBoolean("bidi_numbers_fix", false)) {
+						BidiHack bh = new BidiHack();
+						lastResult = bh.reorder(lastResult);
+					}
+
 					mHandler.post(mUpdateResults);
 				} catch (Exception e) {
 					lastException = e;
