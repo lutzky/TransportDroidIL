@@ -25,7 +25,7 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	private State state;
 	private final Triangulator triangulator;
-	private final Geocoder geo = new Geocoder(getContext(), new Locale("he"));
+	private final Geocoder geo;
 	private String addressString; // Used to communicate between threads
 	private Thread geocoderThread = null;
 
@@ -42,10 +42,13 @@ public class AutolocationTextView extends EnhancedTextView {
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		if (isInEditMode())
+		if (isInEditMode()) {
 			triangulator = null;
-		else
+			geo = null;
+		} else {
 			triangulator = new Triangulator(context);
+			geo = new Geocoder(getContext(), new Locale("he"));
+		}
 
 		startSearch();
 	}
