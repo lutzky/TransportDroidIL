@@ -19,6 +19,7 @@ import org.xml.sax.XMLReader;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Html.TagHandler;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -34,6 +35,10 @@ public abstract class BusGetter {
 	abstract String getQueryJson(String query) throws JSONException;
 	abstract String getQueryJson(int interactionIndex) throws JSONException;
 	abstract String getSessionPrefix();
+	
+	String getBusUrl(CharSequence bus) {
+		return "http://www.bus.co.il/otobusim/Front2007/Lines.asp?LineName=" + bus;
+	}
 
 	private String rawResult = null;
 	private String htmlResult = null;
@@ -119,7 +124,10 @@ public abstract class BusGetter {
 						@Override
 						public void handleTag(boolean opening, String tag, Editable output,
 								XMLReader xmlReader) {
-							if (opening) {
+							// http://stackoverflow.com/questions/4044509/android-how-to-use-the-html-taghandler
+							if (tag.equals("BUS"))
+								processBus(opening, output);
+							else if (opening) {
 								if (tag.equals("li"))
 									output.append("\n * ");
 								else
@@ -137,9 +145,9 @@ public abstract class BusGetter {
 						  end   = builder.getSpanEnd(link),
 						  flags = builder.getSpanFlags(link),
 						  interactionIndex = getInteractionIndex(link.getURL()); 
-				builder.removeSpan(link);
 				if (interactionIndex == 0)
 					continue;
+				builder.removeSpan(link);
 				ClickableSpan newLink = new ClickableSpan() {
 					@Override
 					public void onClick(View widget) {
@@ -155,6 +163,40 @@ public abstract class BusGetter {
 
 		return filteredResult;
 	}
+
+	private void processBus(boolean opening, Editable output) {
+		int len = output.length();
+        if (opening) {
+            output.setSpan(new Object(), len, len, Spannable.SPAN_MARK_MARK);
+        } else {
+            Object obj = getLast(output, Object.class);
+            int where = output.getSpanStart(obj);
+
+            output.removeSpan(obj);
+
+            if (where != len) {
+            	CharSequence bus = output.subSequence(where, len);
+            	String url = getBusUrl(bus);
+            	Log.d(TAG, "Adding bus url: " + url);
+                output.setSpan(new URLSpan(url), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+	}
+
+	private <T> T getLast(Editable text, Class<T> kind) {
+        T[] objs = text.getSpans(0, text.length(), kind);
+
+        if (objs.length == 0) {
+            return null;
+        } else {
+            for(int i = objs.length;i>0;i--) {
+                if(text.getSpanFlags(objs[i-1]) == Spannable.SPAN_MARK_MARK) {
+                    return objs[i-1];
+                }
+            }
+            return null;
+        }
+    }
 
 	private int getInteractionIndex(String url) {
 		Pattern re = Pattern.compile("javascript:UnicellInteraction\\((\\d+)\\)");
