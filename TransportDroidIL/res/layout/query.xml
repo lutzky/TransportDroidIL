@@ -38,6 +38,7 @@
       android:layout_width="fill_parent" android:hint="@string/query_to_hint"
       android:selectAllOnFocus="true" android:completionThreshold="1"
       android:completionHint="@string/query_to_hint" android:id="@+id/query_to"
+      app:preferences_field_name="autocomplete-places"
       android:imeOptions="actionNext" />
   </LinearLayout>
   <LinearLayout android:orientation="horizontal"
@@ -55,6 +56,7 @@
       android:layout_height="fill_parent" android:completionHint="@string/query_time_hint"
       android:layout_width="fill_parent" android:selectAllOnFocus="true"
       android:ellipsize="start" android:hint="@string/query_time_hint"
+      app:preferences_field_name="autocomplete-time"
       android:imeOptions="actionSearch">
     </net.lutzky.transportdroidil.EnhancedTextView>
   </LinearLayout>

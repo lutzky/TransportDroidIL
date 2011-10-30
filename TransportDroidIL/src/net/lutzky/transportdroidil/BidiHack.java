@@ -1,5 +1,8 @@
 package net.lutzky.transportdroidil;
 
+import android.text.Spanned;
+import android.text.SpannedString;
+
 /**
  * A quick hack to get around Bidi limitations in some Android versions:
  * reverses number runs.
@@ -45,5 +48,10 @@ public class BidiHack {
 		flushReverse();
 		
 		return forward.toString();
+	}
+	
+	public Spanned reorder(Spanned s) {
+		// TODO write something that will preserve the links
+		return new SpannedString(reorder(s).toString());
 	}
 }

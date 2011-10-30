@@ -104,7 +104,7 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		String to = getToTextView().getString();
 		String time = getTimeTextView().getString();
 
-		return from + " ל" + to + " " + time;
+		return from + " \u05dc" + to + " " + time; // lamed in unicode escape
 	}
 
 	public void setButtonsEnabled(boolean enabled) {

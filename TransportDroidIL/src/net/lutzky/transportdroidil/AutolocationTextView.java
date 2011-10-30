@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -24,6 +25,9 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	private State state;
 	private final Triangulator triangulator;
+	private final Geocoder geo;
+	private String addressString; // Used to communicate between threads
+	private Thread geocoderThread = null;
 
 	// Starting search mode changes the text, but that's us - not the user, so
 	// don't count that as a reason to set state to CUSTOM again.
@@ -38,10 +42,13 @@ public class AutolocationTextView extends EnhancedTextView {
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		if (isInEditMode())
+		if (isInEditMode()) {
 			triangulator = null;
-		else
+			geo = null;
+		} else {
 			triangulator = new Triangulator(context);
+			geo = new Geocoder(getContext(), new Locale("he"));
+		}
 
 		startSearch();
 	}
@@ -84,6 +91,31 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	private void getLocation() {
 		if (triangulator == null) return;
+		
+		final Handler mHandler = new Handler();
+		
+		final Runnable mUpdateResults = new Runnable() {
+			@Override
+			public void run() {
+				if (state == State.CUSTOM) {
+					Log.i(TAG, "Found location, but state is custom, so dropping it.");
+				} else {
+					setText(addressString);
+					setState(State.FOUND); // After setText, since it activates the onTextChanged handler, and had set state to CUSTOM.
+					setSelection(addressString.length());
+					Log.d(TAG, "We are at: " + addressString);
+				}
+				geocoderThread = null;
+			}
+		};
+		
+		final Runnable mError = new Runnable() {
+			@Override
+			public void run() {
+				// TODO handle errors
+				Log.d(TAG, "No address found for this location.");
+			}
+		};
 
 		triangulator.getLocation(10 * 1000, new LocationListener() {
 			@Override
@@ -94,28 +126,31 @@ public class AutolocationTextView extends EnhancedTextView {
 			public void onProviderDisabled(String provider) {}
 
 			@Override
-			public void onLocationChanged(Location location) {
+			public void onLocationChanged(final Location location) {
 				Log.d(TAG, "Location changed: " + location);
 				if (location == null)
 					return;
-				Geocoder geo = new Geocoder(getContext(), new Locale("he"));
-				List<Address> addresses;
+
 				try {
-					addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-					if (addresses.size() > 0) {
-						if (state == State.CUSTOM) {
-							Log.i(TAG, "Found location, but state is custom, so dropping it.");
-							return;
-						}
-						String addressString = addressToQueryString(addresses.get(0));
-						setText(addressString);
-						setState(State.FOUND); // After setText, since it activates the onTextChanged handler, and had set state to CUSTOM.
-						setSelection(addressString.length());
-						Log.d(TAG, "We are at: " + addressString);
+					if (geocoderThread != null)
+						geocoderThread.join(1000); // TODO stop the older thread somehow
+				} catch (InterruptedException e) {}
+				geocoderThread = new Thread() {
+					@Override
+					public void run() {
+						try {
+							List<Address> addresses;
+							addresses = geo.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+							if (addresses.size() > 0) {
+								addressString = addressToQueryString(addresses.get(0));
+								mHandler.post(mUpdateResults);
+							}
+							else
+								mHandler.post(mError);
+						} catch (IOException e) {} // TODO handle exceptions
 					}
-					else
-						Log.d(TAG, "No address found for this location.");
-				} catch (IOException e) {}
+				};
+				geocoderThread.start();
 			}
 		});
 	}
@@ -129,7 +164,7 @@ public class AutolocationTextView extends EnhancedTextView {
 		firstLine = firstLine.replaceFirst("(\\d+)-(\\d+)", "\\1");
 		String result = firstLine;
 		final String secondLine = address.getAddressLine(1);
-		if (secondLine != null)
+		if (secondLine != null && address.getMaxAddressLineIndex() > 1)
 			result += " " + secondLine;
 		return result;
 	}
