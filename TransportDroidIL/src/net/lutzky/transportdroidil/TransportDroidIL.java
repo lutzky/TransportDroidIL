@@ -47,6 +47,8 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	}
 
 	private void runQuery(final BusGetter bg, final int interactionIndex) {
+		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
 		final Handler mHandler = new Handler();
 
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -89,6 +91,11 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 				try {
 					bg.runQuery(query, interactionIndex);
 					lastResult = bg.getFilteredResult();
+					if (settings.getBoolean("bidi_numbers_fix", false)) {
+						BidiHack bh = new BidiHack();
+						lastResult = bh.reorder(lastResult);
+					}
+
 					mHandler.post(mUpdateResults);
 				} catch (Exception e) {
 					lastException = e;

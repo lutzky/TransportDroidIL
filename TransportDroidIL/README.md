@@ -23,3 +23,6 @@ on the Android Market. You are free to compile the code and use it on your
 phone for free. While you are legally permitted to distribute the APK for free
 (or, hell, even sell it), I kindly ask that you don't do this. Consider it
 donationware with a tax on non-developers :)
+
+Some icons are from: http://glyphish.com (CC)
+Otherse are from: http://www.androidicons.com (CC)
