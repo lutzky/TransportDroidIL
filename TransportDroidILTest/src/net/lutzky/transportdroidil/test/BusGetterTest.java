@@ -28,7 +28,7 @@ public class BusGetterTest extends TestCase {
 	}
 	
 	public void testInteraction(BusGetter bg) throws Throwable {
-		bg.runQuery("ירושלים לתל אביב");
+		bg.runQuery("תל אביב לירושלים");
 		Spanned result = bg.getFilteredResult();
 		ClickableSpan[] spans = result.getSpans(0, result.length(), ClickableSpan.class);
 		assertEquals(2, spans.length);
