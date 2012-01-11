@@ -22,12 +22,12 @@ public class Triangulator implements LocationListener {
 	 */
 	public void getLocation(int timeout, final LocationListener listener) {
 		final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-		String gps = LocationManager.GPS_PROVIDER,
-		 	   network = LocationManager.NETWORK_PROVIDER;
-		onLocationChanged(locationManager.getLastKnownLocation(gps));
-		onLocationChanged(locationManager.getLastKnownLocation(network));
-		locationManager.requestLocationUpdates(network, 0, MIN_DISTANCE, this);
-		locationManager.requestLocationUpdates(gps, 0, MIN_DISTANCE, this);
+		
+		for (String provider : locationManager.getProviders(true)) {
+			onLocationChanged(locationManager.getLastKnownLocation(provider));
+			locationManager.requestLocationUpdates(provider, 0, MIN_DISTANCE, this);
+		}
+		
 		Handler stopUpdates = new Handler();
 		stopUpdates.postDelayed(new Runnable() {
 			@Override
