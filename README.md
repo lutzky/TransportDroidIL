@@ -4,6 +4,10 @@ TransportDroidIL
 TransportDroidIL is a neat little android app for getting bus & train times for
 Israel. It was written by Ohad Lutzky <ohad@lutzky.net>.
 
+The app itself is in the `TransportDroidIL` project. The `TransportDroidILTest`
+project contains functioning unit-tests (yay!), which must be in a separate
+project in the Android SDK.
+
 How it works
 ------------
 
@@ -18,11 +22,8 @@ License
 -------
 
 The source code for TransportDroidIL is available under the GPL license, as
-available in the COPYING file. TransportDroidIL is also available for purchase
-on the Android Market. You are free to compile the code and use it on your
-phone for free. While you are legally permitted to distribute the APK for free
-(or, hell, even sell it), I kindly ask that you don't do this. Consider it
-donationware with a tax on non-developers :)
+available in the `COPYING` file. TransportDroidIL is also available for free
+download.
 
 Some icons are from: http://glyphish.com (CC)
 Otherse are from: http://www.androidicons.com (CC)
