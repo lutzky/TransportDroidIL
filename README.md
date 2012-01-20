@@ -2,7 +2,8 @@ TransportDroidIL
 ================
 
 TransportDroidIL is a neat little android app for getting bus & train times for
-Israel. It was written by Ohad Lutzky <ohad@lutzky.net>.
+Israel. It was written by Ohad Lutzky <ohad@lutzky.net>, with many patches
+by Haggai Eran <haggai.eran@gmail.com>.
 
 The app itself is in the `TransportDroidIL` project. The `TransportDroidILTest`
 project contains functioning unit-tests (yay!), which must be in a separate
