@@ -60,7 +60,7 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 			@Override
 			public void run() {
 				updateResultText(lastResult);
-				dialog.hide();
+				dialog.dismiss();
 				setButtonsEnabled(true);
 			}
 		};
@@ -71,7 +71,7 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 				String exceptionText = String.format(getString(R.string.error),
 						lastException);
 
-				dialog.hide();
+				dialog.dismiss();
 
 				Toast toast = Toast.makeText(getApplicationContext(),
 						exceptionText, Toast.LENGTH_LONG);
