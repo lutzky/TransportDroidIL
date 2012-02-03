@@ -52,6 +52,6 @@ public class BidiHack {
 	
 	public Spanned reorder(Spanned s) {
 		// TODO write something that will preserve the links
-		return new SpannedString(reorder(s).toString());
+		return new SpannedString(reorder(s.toString()));
 	}
 }
