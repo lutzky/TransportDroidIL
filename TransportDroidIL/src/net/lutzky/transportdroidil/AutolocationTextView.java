@@ -11,6 +11,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -176,5 +178,62 @@ public class AutolocationTextView extends EnhancedTextView {
 			setState(State.CUSTOM);
 		}
 		super.onTextChanged(text, start, before, after);
+	}
+	
+	// Save and restore state.
+	// See: http://stackoverflow.com/questions/3542333/how-to-prevent-custom-views-from-losing-state-across-screen-orientation-changes/3542895#3542895
+	
+	@Override
+	public Parcelable onSaveInstanceState() {
+		Parcelable parent = super.onSaveInstanceState();
+		SavedState s = new SavedState(parent);
+		s.state = getState();
+		return s;
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+	    //begin boilerplate code so parent classes can restore state
+	    if(!(state instanceof SavedState)) {
+	      super.onRestoreInstanceState(state);
+	      return;
+	    }
+
+	    SavedState ss = (SavedState)state;
+	    super.onRestoreInstanceState(ss.getSuperState());
+	    //end
+
+	    this.setState(ss.state);
+	}
+	
+	private static class SavedState extends BaseSavedState
+	{
+		public State state;
+		
+		public SavedState(Parcelable parent) {
+			super(parent);
+		}
+		
+		private SavedState(Parcel in) {
+			super(in);
+			this.state = State.valueOf(in.readString());
+		}
+		
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			super.writeToParcel(dest, flags);
+			dest.writeString(this.state.toString());
+		}
+		
+	    //required field that makes Parcelables from a Parcel
+	    public static final Parcelable.Creator<SavedState> CREATOR =
+	        new Parcelable.Creator<SavedState>() {
+	          public SavedState createFromParcel(Parcel in) {
+	            return new SavedState(in);
+	          }
+	          public SavedState[] newArray(int size) {
+	            return new SavedState[size];
+	          }
+	    };
 	}
 }
