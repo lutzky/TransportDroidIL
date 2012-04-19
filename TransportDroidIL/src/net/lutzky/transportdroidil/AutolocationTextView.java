@@ -226,7 +226,8 @@ public class AutolocationTextView extends EnhancedTextView {
 		}
 		
 	    //required field that makes Parcelables from a Parcel
-	    public static final Parcelable.Creator<SavedState> CREATOR =
+	    @SuppressWarnings("unused")
+		public static final Parcelable.Creator<SavedState> CREATOR =
 	        new Parcelable.Creator<SavedState>() {
 	          public SavedState createFromParcel(Parcel in) {
 	            return new SavedState(in);
