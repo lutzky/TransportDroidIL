@@ -14,7 +14,6 @@ public interface RealtimeBusUpdater {
 	List<Eta> getEtas();
 	Float getBusPosition();
 	Date getNextBus();
-	void registerBusUpdateListener(BusUpdateListener listener);
 	void update() throws ClientProtocolException, IOException;
 	
 	public class Stop {

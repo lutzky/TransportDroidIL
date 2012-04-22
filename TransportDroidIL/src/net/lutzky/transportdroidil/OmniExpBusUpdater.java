@@ -23,7 +23,7 @@ import android.text.Html;
 import android.text.Html.TagHandler;
 import android.util.Log;
 
-public class OmniExpBusUpdater extends AbstractRealtimeBusUpdater {
+public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	protected static final String TAG = "OmniExpBusUpdater";
 
 	private final String id;
