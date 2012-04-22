@@ -29,7 +29,7 @@
 <string name="bidi_numbers_fix">תיקון היפוך מספרים</string>
 <string name="bidi_numbers_fix_summary">שנה את הסימון בתיבה זו אם מספרים (קווים, שעות, תאריכים) מופיעים הפוך</string>
 <string name="realtime_bus_menu_item">עדכוני זמן-אמת</string>
-<string name="bus_is_here">* האוטובוס כאן</string>
+<string name="bus_is_here">האוטובוס כאן</string>
 <string name="next_bus_at_time">האוטובוס הבא בשעה</string>
 <string name="updating">מעדכן ...</string>
 <string name="last_update">עודכן לאחרונה ב-</string>
