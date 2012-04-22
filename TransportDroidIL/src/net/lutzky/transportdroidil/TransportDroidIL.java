@@ -197,9 +197,7 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	}
 
 	private void openRealtimeActivity() {
-		Intent intent = new Intent(this, RealtimeBusActivity.class);
-		intent.putExtra("company", "OmniExpress");
-		intent.putExtra("routeId", "01501097");
+		Intent intent = new Intent(this, RealtimePickRouteActivity.class); 
 		startActivity(intent);
 	}
 	
