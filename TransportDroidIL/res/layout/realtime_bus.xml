@@ -29,10 +29,16 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/realtimeStatusTextView"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="fill_parent" >
+
+        <TextView
+            android:id="@+id/realtimeStatusTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </ScrollView>
 
 </LinearLayout>
