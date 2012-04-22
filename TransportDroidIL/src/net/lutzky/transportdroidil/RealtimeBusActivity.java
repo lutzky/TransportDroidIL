@@ -22,7 +22,7 @@ import android.widget.Toast;
 public class RealtimeBusActivity extends Activity {
 	private RealtimeBusUpdater model = null;
 	private ScheduledThreadPoolExecutor timer;
-	protected Object lastException;
+	private Exception lastException;
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	
 	@Override
@@ -38,33 +38,30 @@ public class RealtimeBusActivity extends Activity {
 			if ("OmniExpress".equals(company))
 				model = new OmniExpBusUpdater(routeId);
 			if (model != null) {
-				final Handler mHandler = new Handler();
+				final Handler handler = new Handler();
 				timer = new ScheduledThreadPoolExecutor(1);
 				timer.scheduleWithFixedDelay(new Runnable() {
 					@Override
 					public void run() {
-						mHandler.post(new Runnable() {
-							
-							@Override
-							public void run() {
-								update();
-							}
-						});
+						update(handler);
 					}
 				}, 0, 5, TimeUnit.SECONDS);
 			}
 		}
 	}
 	
-	private void update() {
+	private void update(Handler handler) {
 		if (model == null) return;
-		
-		updateLocationProgress(true);
-		TextView lastUpdate = (TextView) findViewById(R.id.lastUpdateTextView);
-		lastUpdate.setText(getString(R.string.updating));
-		
-		final Handler mHandler = new Handler();
 
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				updateLocationProgress(true);
+				TextView lastUpdate = (TextView) findViewById(R.id.lastUpdateTextView);
+				lastUpdate.setText(getString(R.string.updating));
+			}
+		});
+		
 		final Runnable mUpdateResults = new Runnable() {
 			@Override
 			public void run() {
@@ -84,24 +81,20 @@ public class RealtimeBusActivity extends Activity {
 				toast.show();
 				
 				updateLocationProgress(false);
+
+				lastException.printStackTrace();
+				lastException = null;
 			}
 		};
 
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				try {
-					model.update();
+		try {
+			model.update();
 
-					mHandler.post(mUpdateResults);
-				} catch (Exception e) {
-					lastException = e;
-					mHandler.post(mShowError);
-				}
-			}
-		};
-
-		t.start();
+			handler.post(mUpdateResults);
+		} catch (Exception e) {
+			lastException = e;
+			handler.post(mShowError);
+		}
 	}
 
 	protected void updateViewFromModel() {
