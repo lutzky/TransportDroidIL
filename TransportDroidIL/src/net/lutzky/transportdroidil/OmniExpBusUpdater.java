@@ -124,6 +124,9 @@ public class OmniExpBusUpdater extends AbstractRealtimeBusUpdater {
 			else if (cmd.equals("setNextBus") && args.length == 2) {
 				nextBus = getJSTime(args[1]);
 			}
+			else if (cmd.equals("setTime") && args.length == 1) {
+				lastUpdateTime = getJSTime(args[0]);
+			}
 		}
 	}
 

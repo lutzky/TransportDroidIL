@@ -184,6 +184,9 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		case R.id.preferences:
 			openPreferences();
 			return true;
+		case R.id.realtime_bus:
+			openRealtimeActivity();
+			return true;
 		}
 		return false;
 	}
@@ -193,6 +196,13 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		startActivityForResult(intent, 0);
 	}
 
+	private void openRealtimeActivity() {
+		Intent intent = new Intent(this, RealtimeBusActivity.class);
+		intent.putExtra("company", "OmniExpress");
+		intent.putExtra("routeId", "01501097");
+		startActivity(intent);
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		applyPreferences();
