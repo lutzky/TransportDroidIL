@@ -92,6 +92,7 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
+		@SuppressWarnings("unchecked")
 		Map<String, String> child = (Map<String, String>) adapter.getChild(groupPosition, childPosition);
 		String routeId = child.get(ROUTE_ID);
 		

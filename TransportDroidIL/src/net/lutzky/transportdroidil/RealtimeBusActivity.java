@@ -58,9 +58,10 @@ public class RealtimeBusActivity extends Activity {
 	}
 	
 	@Override
-	protected void onDestroy() {
+	protected void onPause() {
 		timer.shutdownNow();
-		super.onDestroy();
+		timer = null;
+		super.onPause();
 	}
 	
 	private void update(Handler handler) {
