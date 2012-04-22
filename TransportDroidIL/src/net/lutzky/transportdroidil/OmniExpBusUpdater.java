@@ -32,7 +32,7 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	private String routeTitle;
 	private List<Stop> stops;
 	private List<Eta> etas;
-	private Float busPosition;
+	private List<Bus> buses;
 	private Date nextBus;
 	
 	private final DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -67,8 +67,8 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	}
 
 	@Override
-	public Float getBusPosition() {
-		return busPosition;
+	public List<Bus> getBuses() {
+		return buses;
 	}
 	
 	@Override
@@ -94,15 +94,14 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 		Log.d(TAG, "html: " + html);
 		CharSequence scriptTag = getResponseScriptTag(html);
 		parseScriptTag(scriptTag);
-		notifyListeners();
 	}
 
 	private static final Pattern commandPattern = Pattern.compile("parent\\.frames\\[1\\]\\.(\\w+)\\s*?\\((.*?)\\)\\s*?");
 	private void parseScriptTag(CharSequence scriptTag) {
 		routeNumber = routeTitle = null;
 		stops = new ArrayList<Stop>(stops != null ? stops.size() : 10);
-		etas = null;
-		busPosition = null;
+		etas = new ArrayList<Eta>(etas != null ? etas.size() : 10);
+		buses = new ArrayList<Bus>(buses != null ? buses.size() : 1);
 		nextBus = null;
 		
 		Matcher m = commandPattern.matcher(scriptTag);
@@ -111,6 +110,9 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 			String[] args = parseArgs(m.group(2));
 			Log.d(TAG, cmd);
 			Log.d(TAG, m.group(2));
+			float position;
+			boolean direction;
+			
 			if (cmd.equals("drawCaption") && args.length == 5 && getJSBool(args[0])) {
 				routeNumber = getJSString(args[4]);
 				routeTitle = getJSString(args[1]) + " - " + getJSString(args[2]);
@@ -119,13 +121,21 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 				stops.add(new Stop(getJSString(args[0]), getJSFloat(args[1])));
 			}
 			else if (cmd.equals("drawBus") && args.length == 3) {
-				busPosition = getJSFloat(args[0]);
+				position = getJSFloat(args[0]);
+				direction = getJSBool(args[1]);
+				buses.add(new Bus(direction, position));
 			}
 			else if (cmd.equals("setNextBus") && args.length == 2) {
 				nextBus = getJSTime(args[1]);
 			}
 			else if (cmd.equals("setTime") && args.length == 1) {
 				lastUpdateTime = getJSTime(args[0]);
+			}
+			else if (cmd.equals("setEta") && args.length == 3) {
+				direction = getJSBool(args[0]);
+				position = getJSFloat(args[1]);
+				Date eta = getJSTime(args[2]);
+				etas.add(new Eta(direction, position, eta));				
 			}
 		}
 	}

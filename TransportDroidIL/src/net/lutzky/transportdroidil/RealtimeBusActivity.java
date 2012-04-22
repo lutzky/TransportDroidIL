@@ -3,11 +3,18 @@ package net.lutzky.transportdroidil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import net.lutzky.transportdroidil.RealtimeBusUpdater.Bus;
+import net.lutzky.transportdroidil.RealtimeBusUpdater.Entity;
+import net.lutzky.transportdroidil.RealtimeBusUpdater.EntityVisitor;
+import net.lutzky.transportdroidil.RealtimeBusUpdater.Eta;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 
 import android.app.Activity;
@@ -118,11 +125,12 @@ public class RealtimeBusActivity extends Activity {
 	}
 
 	private String buildRealtimeTextFromModel() {
-		StringBuilder result = new StringBuilder();
-		Float busPosition = model.getBusPosition();
-		Date nextBus = model.getNextBus();
+		final StringBuilder result = new StringBuilder();
 		List<Stop> stops = model.getStops();
-		float prevPosition = -1;
+		List<Eta> etas = model.getEtas();
+		List<Bus> buses = model.getBuses();
+		Date nextBus = model.getNextBus();
+		
 		if (nextBus != null) {
 			result.append(getString(R.string.next_bus_at_time));
 			result.append(' ');
@@ -132,15 +140,41 @@ public class RealtimeBusActivity extends Activity {
 		result.append('\n');
 		result.append(getString(R.string.stops));
 		result.append('\n');
-		for (Stop stop : stops) {
-			if (busPosition != null && busPosition >= prevPosition && busPosition < stop.getPosition()) {
-				result.append(getString(R.string.bus_is_here));
-				result.append('\n');
+		
+		List<Entity> allEntities = new ArrayList<Entity>(stops.size() + etas.size() + buses.size());
+		allEntities.addAll(stops);
+		allEntities.addAll(etas);
+		allEntities.addAll(buses);
+		Collections.sort(allEntities, new Comparator<Entity>() {
+			@Override
+			public int compare(Entity lhs, Entity rhs) {
+				return Double.compare(lhs.getPosition(), rhs.getPosition());
 			}
-			result.append("  ");
-			result.append(stop.getTitle());
+		});
+		
+		for (Entity entity : allEntities) {
+			entity.visit(new EntityVisitor() {
+				@Override
+				public void visitStop(Stop stop) {
+					result.append("  ");
+					result.append(stop.getTitle());
+				}
+				
+				@Override
+				public void visitEta(Eta eta) {
+					result.append(timeFormat.format(eta.getEta()));
+				}
+				
+				@Override
+				public void visitBus(Bus bus) {
+					if (bus.getDirection())
+						result.append("↓ ");
+					else
+						result.append("↑ ");
+					result.append(getString(R.string.bus_is_here));
+				}
+			});
 			result.append('\n');
-			prevPosition = (float) stop.getPosition();
 		}
 		return result.toString();
 	}
