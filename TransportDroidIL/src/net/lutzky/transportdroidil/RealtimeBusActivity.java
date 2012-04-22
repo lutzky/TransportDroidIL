@@ -50,6 +50,12 @@ public class RealtimeBusActivity extends Activity {
 		}
 	}
 	
+	@Override
+	protected void onDestroy() {
+		timer.shutdownNow();
+		super.onDestroy();
+	}
+	
 	private void update(Handler handler) {
 		if (model == null) return;
 
