@@ -28,6 +28,7 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 
 	private final String id;
 	private Date lastUpdateTime;
+	private boolean serviceActive = true;
 	private String routeNumber;
 	private String routeTitle;
 	private List<Stop> stops;
@@ -44,6 +45,11 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	@Override
 	public Date getLastUpdateTime() {
 		return lastUpdateTime;
+	}
+	
+	@Override
+	public boolean isServiceActive() {
+		return serviceActive;
 	}
 
 	@Override
@@ -98,7 +104,9 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 
 	private static final Pattern commandPattern = Pattern.compile("parent\\.frames\\[1\\]\\.(\\w+)\\s*?\\((.*?)\\)\\s*?");
 	private void parseScriptTag(CharSequence scriptTag) {
+		lastUpdateTime = null;
 		routeNumber = routeTitle = null;
+		serviceActive = true;
 		stops = new ArrayList<Stop>(stops != null ? stops.size() : 10);
 		etas = new ArrayList<Eta>(etas != null ? etas.size() : 10);
 		buses = new ArrayList<Bus>(buses != null ? buses.size() : 1);
@@ -136,6 +144,10 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 				position = getJSFloat(args[1]);
 				Date eta = getJSTime(args[2]);
 				etas.add(new Eta(direction, position, eta));				
+			}
+			else if (cmd.equals("endRoute") && args.length == 1) {
+				// args[0] == direction
+				serviceActive = false;
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 
 public interface RealtimeBusUpdater {
 	Date getLastUpdateTime();
+	boolean isServiceActive();
 	String getRouteNumber();
 	String getRouteTitle();
 	List<Stop> getStops();

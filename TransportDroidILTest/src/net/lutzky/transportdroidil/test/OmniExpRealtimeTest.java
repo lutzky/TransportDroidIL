@@ -1,33 +1,23 @@
 package net.lutzky.transportdroidil.test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
 import net.lutzky.transportdroidil.OmniExpBusUpdater;
 import net.lutzky.transportdroidil.RealtimeBusUpdater;
-import net.lutzky.transportdroidil.RealtimeBusUpdater.BusUpdateListener;
+import net.lutzky.transportdroidil.RealtimeBusUpdater.Bus;
+import net.lutzky.transportdroidil.RealtimeBusUpdater.Eta;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 import junit.framework.TestCase;
 
-public class OmniExpRealtimeTest extends TestCase implements BusUpdateListener {
-	private boolean gotUpdate;
-	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		gotUpdate = false;
-	}
-	
+public class OmniExpRealtimeTest extends TestCase {
 	public void testRoute15() throws ClientProtocolException, IOException {
 		RealtimeBusUpdater r = new OmniExpBusUpdater("01501097");
-		r.registerBusUpdateListener(this);
 		r.update();
-		waitForUpdate();
 		
 		assertEquals("015", r.getRouteNumber());
 		assertEquals("מסוף יקנעם - מסוף יקנעם-הורדה", r.getRouteTitle());
@@ -55,28 +45,15 @@ public class OmniExpRealtimeTest extends TestCase implements BusUpdateListener {
 			assertTrue(Math.abs(expectedStop.getPosition() - actualStop.getPosition()) < 0.001);
 		}
 		
-		Float pos = r.getBusPosition();
-		if (pos != null)
+		assertTrue(!r.isServiceActive() || r.getNextBus() != null || r.getBuses().size() > 0);
+		for (Bus bus : r.getBuses()) {
+			double pos = bus.getPosition();
 			assertTrue("Invalid bus position", pos >= 0 && pos <= 100);
-		else
-			assertTrue("Invalid next bus time", r.getNextBus() != null);
-	}
-
-	private void waitForUpdate() {
-		while (!gotUpdate) {
-			synchronized (this) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// try again
-				}
-			}
 		}
-	}
-
-	@Override
-	public synchronized void realtimeBusUpdate(RealtimeBusUpdater source) {
-		gotUpdate = true;
-		notify();
+		
+		for (Eta eta : r.getEtas()) {
+			Date lastUpdate = r.getLastUpdateTime();
+			assertTrue("Invalid ETA", eta.getEta().after(lastUpdate));
+		}
 	}
 }
