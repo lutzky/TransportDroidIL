@@ -34,4 +34,5 @@
 <string name="updating">מעדכן ...</string>
 <string name="last_update">עודכן לאחרונה ב-</string>
 <string name="stops">תחנות:</string>
+<string name="inactive_service">השירות להיום הסתיים\n</string>
 </resources>

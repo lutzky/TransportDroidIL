@@ -148,7 +148,9 @@ public class RealtimeBusActivity extends Activity {
 		List<Eta> etas = model.getEtas();
 		List<Bus> buses = model.getBuses();
 		Date nextBus = model.getNextBus();
-		
+
+		if (!model.isServiceActive())
+			result.append(getString(R.string.inactive_service));
 		if (nextBus != null) {
 			result.append(getString(R.string.next_bus_at_time));
 			result.append(' ');
