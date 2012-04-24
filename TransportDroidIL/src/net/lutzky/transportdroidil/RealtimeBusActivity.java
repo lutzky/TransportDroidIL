@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +32,7 @@ public class RealtimeBusActivity extends Activity {
 	private ScheduledThreadPoolExecutor timer;
 	private Exception lastException;
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	private ScheduledFuture<?> scheduledUpdate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +46,39 @@ public class RealtimeBusActivity extends Activity {
 			String routeId = intent.getExtras().getString("routeId");
 			if ("OmniExpress".equals(company))
 				model = new OmniExpBusUpdater(routeId);
-			if (model != null) {
-				final Handler handler = new Handler();
-				timer = new ScheduledThreadPoolExecutor(1);
-				timer.scheduleWithFixedDelay(new Runnable() {
-					@Override
-					public void run() {
-						update(handler);
-					}
-				}, 0, 5, TimeUnit.SECONDS);
-			}
+			else if ("MockCompany".equals(company))
+				model = new MockRealtimeBusUpdater();
 		}
+		timer = new ScheduledThreadPoolExecutor(1);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startUpdates();
 	}
 	
 	@Override
 	protected void onPause() {
-		timer.shutdownNow();
-		timer = null;
+		stopUpdates();
 		super.onPause();
+	}
+
+	private void startUpdates() {
+		if (model != null && scheduledUpdate == null) {
+			final Handler handler = new Handler();
+			scheduledUpdate = timer.scheduleWithFixedDelay(new Runnable() {
+				@Override
+				public void run() {
+					update(handler);
+				}
+			}, 0, 5, TimeUnit.SECONDS);
+		}
+	}
+	
+	private void stopUpdates() {
+		scheduledUpdate.cancel(true);
+		scheduledUpdate = null;
 	}
 	
 	private void update(Handler handler) {
@@ -183,5 +200,9 @@ public class RealtimeBusActivity extends Activity {
 	private void updateLocationProgress(boolean updating) {
 		ProgressBar progress = (ProgressBar)findViewById(R.id.realtimeUpdateProgress);
 		progress.setVisibility(updating ? View.VISIBLE : View.GONE);
+	}
+
+	public RealtimeBusUpdater getModel() {
+		return model;
 	}
 }
