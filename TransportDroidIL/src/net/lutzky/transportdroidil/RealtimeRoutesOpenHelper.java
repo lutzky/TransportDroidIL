@@ -14,7 +14,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class RealtimeRoutesOpenHelper extends SQLiteOpenHelper {
-	private static final int VERSION = 2;
+	private static final String MAIN_VARIANT_PREFIX = "קו ראשי: ";
+	private static final int VERSION = 3;
 	private static final String NAME = "realtime_routes";
 	private static final String TAG = "RealtimeRoutesDB";
 	
@@ -32,21 +33,50 @@ public class RealtimeRoutesOpenHelper extends SQLiteOpenHelper {
 				"variant_index INT, " +  
 				"number TEXT" +
 			");");
+		createCompanyNames(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion == 1 && newVersion >= 2)
 			db.execSQL("alter table routes add column variant_index INT");
+		if (oldVersion <= 2 && newVersion >= 3)
+			createCompanyNames(db);
 	}
 	
+	static private final String COMPANY_NAMES[][] = new String[][] {
+		{ "51", "נסיעות ותיירות נצרת" },
+		{ "52", "אוטובוסים מאוחדים נצרת" },
+		{ "53", "נתיב אקספרס" },
+		{ "54", "נתיב אקספרס" },
+		{ "55", "נתיב אקספרס" },
+		{ "56", "נתיב אקספרס" },
+		{ "57", "נתיב אקספרס" },
+		{ "62", "אוטובוסים מאוחדים נצרת" },
+		{ "72", "אוטובוסים מאוחדים נצרת" },
+		{ "97", "אומני אקספרס" },
+		{ "99", "נתיב אקספרס" }
+	};
+	private void createCompanyNames(SQLiteDatabase db) {
+		db.execSQL(
+			"create table company_names (" +
+				"company TEXT, " +
+				"company_name TEXT);");
+		for (String[] company : COMPANY_NAMES) {
+			ContentValues values = new ContentValues(2);
+			values.put("company", company[0]);
+			values.put("company_name", company[1]);
+			db.insert("company_names", null, values);
+		}
+	}
+
 	static private final String OMNI_URL = "http://213.8.94.157/nateev/route.jsp?rtNum=01501097&&com=omni&eshkol=97";
 	public void fillOmniExpress() throws ClientProtocolException, IOException {
 		SQLiteDatabase db = getWritableDatabase();
 		try {
 			db.beginTransaction();
 			try {
-				db.execSQL("delete from routes where company == 'OmniExpress';");
+				db.execSQL("delete from routes;");
 		
 				BufferedReader reader = OmniParse.downloadStream(OMNI_URL);
 				parseAlternatives(reader, db);
@@ -104,7 +134,10 @@ public class RealtimeRoutesOpenHelper extends SQLiteOpenHelper {
 					else
 						id = row.getAsString("id");
 					if (id != null) {
-						row.put("variant", OmniParse.getJSString(m.group(2)));
+						String variantName = OmniParse.getJSString(m.group(2));
+						if (index == 0 && variantName.startsWith(MAIN_VARIANT_PREFIX))
+							variantName = variantName.substring(MAIN_VARIANT_PREFIX.length());
+						row.put("variant", variantName);
 						row.put("company", id.substring(6));
 						row.put("number", lineNumber(id));
 						db.insert("routes", null, row);
