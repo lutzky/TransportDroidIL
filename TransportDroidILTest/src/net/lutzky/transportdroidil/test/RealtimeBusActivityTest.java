@@ -5,7 +5,6 @@ import net.lutzky.transportdroidil.MockRealtimeBusUpdater.UpdateListener;
 import net.lutzky.transportdroidil.RealtimeBusActivity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
 
 public class RealtimeBusActivityTest extends ActivityInstrumentationTestCase2<RealtimeBusActivity> implements UpdateListener {
 

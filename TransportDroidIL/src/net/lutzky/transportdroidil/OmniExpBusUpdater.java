@@ -1,21 +1,13 @@
 package net.lutzky.transportdroidil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.xml.sax.XMLReader;
 
 import android.text.Editable;
@@ -35,8 +27,6 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	private List<Eta> etas;
 	private List<Bus> buses;
 	private Date nextBus;
-	
-	private final DefaultHttpClient httpclient = new DefaultHttpClient();
 	
 	public OmniExpBusUpdater(String id) {
 		this.id = id;
@@ -85,18 +75,7 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 
 	@Override
 	public void update() throws ClientProtocolException, IOException {
-		HttpGet request = new HttpGet(getUrl());
-		HttpResponse response = httpclient.execute(request);
-		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new ClientProtocolException("" + response.getStatusLine());
-		}
-		String html = new String();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		String line = reader.readLine();
-		while (line != null) {
-			html += line;
-			line = reader.readLine();
-		}
+		String html = OmniParse.downloadUrl(getUrl()).toString();
 		Log.d(TAG, "html: " + html);
 		CharSequence scriptTag = getResponseScriptTag(html);
 		parseScriptTag(scriptTag);
@@ -115,34 +94,34 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 		Matcher m = commandPattern.matcher(scriptTag);
 		while (m.find()) {
 			String cmd = m.group(1);
-			String[] args = parseArgs(m.group(2));
+			String[] args = OmniParse.parseArgs(m.group(2));
 			Log.d(TAG, cmd);
 			Log.d(TAG, m.group(2));
 			float position;
 			boolean direction;
 			
-			if (cmd.equals("drawCaption") && args.length == 5 && getJSBool(args[0])) {
-				routeNumber = getJSString(args[4]);
-				routeTitle = getJSString(args[1]) + " - " + getJSString(args[2]);
+			if (cmd.equals("drawCaption") && args.length == 5 && OmniParse.getJSBool(args[0])) {
+				routeNumber = OmniParse.getJSString(args[4]);
+				routeTitle = OmniParse.getJSString(args[1]) + " - " + OmniParse.getJSString(args[2]);
 			}
 			else if (cmd.equals("drawStop") && args.length == 3) {
-				stops.add(new Stop(getJSString(args[0]), getJSFloat(args[1])));
+				stops.add(new Stop(OmniParse.getJSString(args[0]), OmniParse.getJSFloat(args[1])));
 			}
 			else if (cmd.equals("drawBus") && args.length == 3) {
-				position = getJSFloat(args[0]);
-				direction = getJSBool(args[1]);
+				position = OmniParse.getJSFloat(args[0]);
+				direction = OmniParse.getJSBool(args[1]);
 				buses.add(new Bus(direction, position));
 			}
 			else if (cmd.equals("setNextBus") && args.length == 2) {
-				nextBus = getJSTime(args[1]);
+				nextBus = OmniParse.getJSTime(args[1]);
 			}
 			else if (cmd.equals("setTime") && args.length == 1) {
-				lastUpdateTime = getJSTime(args[0]);
+				lastUpdateTime = OmniParse.getJSTime(args[0]);
 			}
 			else if (cmd.equals("setEta") && args.length == 3) {
-				direction = getJSBool(args[0]);
-				position = getJSFloat(args[1]);
-				Date eta = getJSTime(args[2]);
+				direction = OmniParse.getJSBool(args[0]);
+				position = OmniParse.getJSFloat(args[1]);
+				Date eta = OmniParse.getJSTime(args[2]);
 				etas.add(new Eta(direction, position, eta));				
 			}
 			else if (cmd.equals("endRoute") && args.length == 1) {
@@ -152,60 +131,7 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 		}
 	}
 
-	private Date getJSTime(String string) {
-		// Remove quotes if necessary.
-		string = getJSString(string);
-		DateFormat timeFormat = new SimpleDateFormat("HH:mm");
-		try {
-			return timeFormat.parse(string);
-		} catch (ParseException e) {
-			Log.d(TAG, "Unable to parse time: " + string);
-			return null;
-		}
-	}
-
-	private float getJSFloat(String string) {
-		// Remove quotes if necessary.
-		string = getJSString(string);
-		return Float.parseFloat(string);
-	}
-
-	private String getJSString(String string) {
-		string = parseUnicode(string);
-		if (string.startsWith("'") && string.endsWith("'"))
-			return string.substring(1, string.length() - 1);
-		else if (string.startsWith("\"") && string.endsWith("\""))
-			return string.substring(1, string.length() - 1);
-		else
-			return string;
-	}
 	
-	private static final Pattern unicodeCharEscape = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
-	private String parseUnicode(String string) {
-		StringBuilder result = new StringBuilder();
-		Matcher m = unicodeCharEscape.matcher(string);
-		int prev = 0;
-		while (m.find()) {
-			result.append(string.substring(prev, m.start()));
-			char chr = Character.toChars(Integer.parseInt(m.group(1), 16))[0];
-			result.append(chr);
-			prev = m.end();
-		}
-		result.append(string.substring(prev));
-		return result.toString();
-	}
-
-	private boolean getJSBool(String string) {
-		return string != null && string.equals("true");
-	}
-
-	private String[] parseArgs(String args) {
-		String[] res = args.split(",");
-		if (res.length == 1 && res[0].length() == 0)
-			return new String[0];
-		else
-			return res;
-	}
 
 	private CharSequence getResponseScriptTag(String html) {
 		final StringBuilder result = new StringBuilder(); 
