@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +22,13 @@ import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +38,7 @@ public class RealtimeBusActivity extends Activity {
 	private Exception lastException;
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	private ScheduledFuture<?> scheduledUpdate;
+	private SimpleAdapter listAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,9 @@ public class RealtimeBusActivity extends Activity {
 				model = new MockRealtimeBusUpdater();
 		}
 		timer = new ScheduledThreadPoolExecutor(1);
+		
+		ListView lv = (ListView) findViewById(R.id.realtimeUpdateListView);
+		lv.addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));
 	}
 	
 	@Override
@@ -134,33 +143,30 @@ public class RealtimeBusActivity extends Activity {
 		TextView routeTitle = (TextView) findViewById(R.id.routeTitleTextView);
 		routeTitle.setText(title);
 		
-		String realtimeText = buildRealtimeTextFromModel();
-		TextView realtime = (TextView) findViewById(R.id.realtimeStatusTextView);
-		realtime.setText(realtimeText);
+		findViewById(R.id.inactive_service).setVisibility(
+				model.isServiceActive() ? View.GONE : View.VISIBLE);
+		
+		List<Map<String, String>> data = buildRealtimeDataFromModel();
+		ListView lv = (ListView) findViewById(R.id.realtimeUpdateListView);
+		listAdapter = new SimpleAdapter(
+				this, 
+				data, 
+				R.layout.realtime_bus_table_item, 
+				new String[] { "stop", "eta-up", "eta-down", "bus-up", "bus-down" }, 
+				new int[] { R.id.stop, R.id.eta_up, R.id.eta_down, R.id.bus_up, R.id.bus_down });
+		lv.setAdapter(listAdapter);
+
 		
 		TextView lastUpdate = (TextView) findViewById(R.id.lastUpdateTextView);
 		lastUpdate.setText(getString(R.string.last_update) + timeFormat.format(model.getLastUpdateTime()));
 	}
 
-	private String buildRealtimeTextFromModel() {
-		final StringBuilder result = new StringBuilder();
+	private List<Map<String, String>> buildRealtimeDataFromModel() {
+		final List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		List<Stop> stops = model.getStops();
 		List<Eta> etas = model.getEtas();
 		List<Bus> buses = model.getBuses();
-		Date nextBus = model.getNextBus();
 
-		if (!model.isServiceActive())
-			result.append(getString(R.string.inactive_service));
-		if (nextBus != null) {
-			result.append(getString(R.string.next_bus_at_time));
-			result.append(' ');
-			result.append(timeFormat.format(nextBus));
-			result.append('\n');
-		}
-		result.append('\n');
-		result.append(getString(R.string.stops));
-		result.append('\n');
-		
 		List<Entity> allEntities = new ArrayList<Entity>(stops.size() + etas.size() + buses.size());
 		allEntities.addAll(stops);
 		allEntities.addAll(etas);
@@ -168,35 +174,79 @@ public class RealtimeBusActivity extends Activity {
 		Collections.sort(allEntities, new Comparator<Entity>() {
 			@Override
 			public int compare(Entity lhs, Entity rhs) {
-				return Double.compare(lhs.getPosition(), rhs.getPosition());
+				int posCompare = Double.compare(lhs.getPosition(), rhs.getPosition());
+				if (posCompare == 0) {
+					int lhsType = getTypeOrder(lhs),
+						rhsType = getTypeOrder(rhs);
+					return lhsType - rhsType;
+				}
+				else
+					return posCompare;
+			}
+
+			private int getTypeOrder(Entity e) {
+				if (e instanceof Bus)
+					return 0;
+				else if (e instanceof Stop)
+					return 1;
+				else // if (e instanceof Eta)
+					return 2;
 			}
 		});
 		
+		final Map<String, String> item = new HashMap<String, String>();
+		EntityVisitor visitor = new EntityVisitor() {
+			double prevPosition = 0;
+			boolean prevIsBus = false;
+			
+			@Override
+			public void visitBus(Bus bus) {
+				prevIsBus = true;
+				addItem(bus.getPosition());
+				boolean dir = bus.getDirection();
+				String busArrow = dir ? "↓" : "↑";
+				String cell = dir ? "bus-down" : "bus-up";
+				item.put(cell, busArrow);
+			}
+			
+			@Override
+			public void visitStop(Stop stop) {
+				if (!prevIsBus)
+					addItem(stop.getPosition());
+				else
+					prevPosition = stop.getPosition();
+				prevIsBus = false;
+				item.put("stop", stop.getTitle());
+			}
+			
+			@Override
+			public void visitEta(Eta eta) {
+				prevIsBus = false;
+				if (eta.getPosition() != prevPosition)
+					addItem(eta.getPosition());
+				boolean dir = eta.getDirection();
+				String cell = dir ? "eta-down" : "eta-up";
+				item.put(cell, timeFormat.format(eta.getEta()));
+			}
+
+			private boolean first = true;
+			private void addItem(double position) {
+				if (!first)
+					result.add(new HashMap<String, String>(item));
+				item.put("stop", "");
+				item.put("bus-up", "");
+				item.put("bus-down", "");
+				item.put("eta-up", "");
+				item.put("eta-down", "");
+				prevPosition = position;
+				first = false;
+			}
+		};
 		for (Entity entity : allEntities) {
-			entity.visit(new EntityVisitor() {
-				@Override
-				public void visitStop(Stop stop) {
-					result.append("  ");
-					result.append(stop.getTitle());
-				}
-				
-				@Override
-				public void visitEta(Eta eta) {
-					result.append(timeFormat.format(eta.getEta()));
-				}
-				
-				@Override
-				public void visitBus(Bus bus) {
-					if (bus.getDirection())
-						result.append("↓ ");
-					else
-						result.append("↑ ");
-					result.append(getString(R.string.bus_is_here));
-				}
-			});
-			result.append('\n');
+			entity.visit(visitor);
 		}
-		return result.toString();
+		result.add(item);
+		return result;
 	}
 	
 	private void updateLocationProgress(boolean updating) {

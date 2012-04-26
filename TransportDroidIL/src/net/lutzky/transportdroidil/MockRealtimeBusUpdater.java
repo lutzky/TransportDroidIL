@@ -47,12 +47,6 @@ public class MockRealtimeBusUpdater implements RealtimeBusUpdater {
 	}
 
 	@Override
-	public Date getNextBus() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void update() throws ClientProtocolException, IOException {
 		lastUpdate = new Date();
 		if (listener != null)

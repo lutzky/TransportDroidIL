@@ -45,7 +45,7 @@ public class OmniExpRealtimeTest extends TestCase {
 			assertTrue(Math.abs(expectedStop.getPosition() - actualStop.getPosition()) < 0.001);
 		}
 		
-		assertTrue(!r.isServiceActive() || r.getNextBus() != null || r.getBuses().size() > 0);
+		assertTrue(!r.isServiceActive() || r.getEtas().size() > 0 || r.getBuses().size() > 0);
 		for (Bus bus : r.getBuses()) {
 			double pos = bus.getPosition();
 			assertTrue("Invalid bus position", pos >= 0 && pos <= 100);

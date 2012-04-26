@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/bus_up"
+        android:layout_width="30dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:lines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/eta_up"
+        android:layout_width="50dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:lines="1"
+        android:text="00:00"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/stop"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="5px"
+        android:layout_marginRight="5px"
+        android:layout_weight="1.61"
+        android:text="תחנה"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/eta_down"
+        android:layout_width="50dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:lines="1"
+        android:text="00:00"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/bus_down"
+        android:layout_width="30dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:lines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

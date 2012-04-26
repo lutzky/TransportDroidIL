@@ -14,7 +14,6 @@ public interface RealtimeBusUpdater {
 	List<Stop> getStops();
 	List<Eta> getEtas();
 	List<Bus> getBuses();
-	Date getNextBus();
 	void update() throws ClientProtocolException, IOException;
 	
 	public abstract class Entity {

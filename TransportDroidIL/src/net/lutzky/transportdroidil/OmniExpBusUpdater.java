@@ -26,7 +26,6 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	private List<Stop> stops;
 	private List<Eta> etas;
 	private List<Bus> buses;
-	private Date nextBus;
 	
 	public OmniExpBusUpdater(String id) {
 		this.id = id;
@@ -68,12 +67,6 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 	}
 	
 	@Override
-	public Date getNextBus() {
-		return nextBus;
-	}
-
-
-	@Override
 	public void update() throws ClientProtocolException, IOException {
 		String html = OmniParse.downloadUrl(getUrl()).toString();
 		Log.d(TAG, "html: " + html);
@@ -89,7 +82,6 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 		stops = new ArrayList<Stop>(stops != null ? stops.size() : 10);
 		etas = new ArrayList<Eta>(etas != null ? etas.size() : 10);
 		buses = new ArrayList<Bus>(buses != null ? buses.size() : 1);
-		nextBus = null;
 		
 		Matcher m = commandPattern.matcher(scriptTag);
 		while (m.find()) {
@@ -113,7 +105,10 @@ public class OmniExpBusUpdater implements RealtimeBusUpdater {
 				buses.add(new Bus(direction, position));
 			}
 			else if (cmd.equals("setNextBus") && args.length == 2) {
-				nextBus = OmniParse.getJSTime(args[1]);
+//				TODO put the next bus info somewhere interesting.
+//				direction = OmniParse.getJSBool(args[0]);
+//				Date when = OmniParse.getJSTime(args[1]);
+//				etas.add(new Eta(direction, direction ? -1 : 2, when));
 			}
 			else if (cmd.equals("setTime") && args.length == 1) {
 				lastUpdateTime = OmniParse.getJSTime(args[0]);

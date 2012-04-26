@@ -29,16 +29,17 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView1"
+    <TextView
+        android:id="@+id/inactive_service"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/inactive_service"
+        android:textAppearance="?android:attr/textAppearanceMedium" android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/realtimeUpdateListView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-
-        <TextView
-            android:id="@+id/realtimeStatusTextView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </ScrollView>
+    </ListView>
 
 </LinearLayout>
