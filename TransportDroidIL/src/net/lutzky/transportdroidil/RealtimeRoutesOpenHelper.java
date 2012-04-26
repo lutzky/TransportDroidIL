@@ -153,17 +153,16 @@ public class RealtimeRoutesOpenHelper extends SQLiteOpenHelper {
 
 	private String lineNumber(String id) {
 		StringBuilder result = new StringBuilder(id.subSequence(0, 4));
-		int firstNonZero, lastNonZero;
+		int firstNonZero;
 		for (firstNonZero = 0; firstNonZero < result.length() && result.charAt(firstNonZero) == '0'; ++firstNonZero)
 			;
 		result.delete(0, firstNonZero);
-		for (lastNonZero = result.length() - 1; lastNonZero >= 0 && result.charAt(lastNonZero) == '0'; --lastNonZero)
-			;
-		result.delete(lastNonZero + 1, result.length());
 		char lastChar = result.charAt(result.length()-1);
 		if (!Character.isDigit(lastChar))
 			// translate to Hebrew
 			result.setCharAt(result.length() - 1, (char) (lastChar - 'A' + 'א'));
+		else if (lastChar == '0')
+			result.delete(result.length() - 1, result.length());
 		return result.toString();
 	}
 }
