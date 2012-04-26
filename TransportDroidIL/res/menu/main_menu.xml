@@ -2,5 +2,5 @@
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/preferences" android:title="@string/preferences" android:icon="@drawable/ic_menu_settings"/>
-	<item android:id="@+id/realtime_bus" android:title="@string/realtime_bus_menu_item"></item>
+	<item android:id="@+id/realtime_bus" android:title="@string/realtime_bus_menu_item" android:icon="@drawable/ic_menu_recent_history"></item>
 </menu>
