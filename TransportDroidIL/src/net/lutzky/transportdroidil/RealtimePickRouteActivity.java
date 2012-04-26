@@ -1,22 +1,26 @@
 package net.lutzky.transportdroidil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 
 import android.app.ExpandableListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleCursorTreeAdapter;
+import android.widget.Toast;
 
 public class RealtimePickRouteActivity extends ExpandableListActivity {
 	private ExpandableListAdapter adapter;
 	private SQLiteDatabase database;
+	private Exception lastException;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,6 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
-		@SuppressWarnings("unchecked")
 		Cursor child = (Cursor) adapter.getChild(groupPosition, childPosition);
 		String routeId = child.getString(2);
 		
@@ -79,5 +82,56 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 		startActivity(intent);
 		
 		return true;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.realtime_bus_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			refresh();
+			return true;
+		}
+		return false;
+	}
+
+	private void refresh() {
+		final ProgressDialog dialog = ProgressDialog.show(this, "", getString(R.string.refresh));
+		Thread updater = new Thread() {
+			public void run() {
+				RealtimeRoutesOpenHelper helper = new RealtimeRoutesOpenHelper(RealtimePickRouteActivity.this);
+				try {
+					helper.fillOmniExpress();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+						}
+					});
+				} catch (IOException e) {
+					lastException = e;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							String exceptionText = String.format(getString(R.string.error),
+									lastException);
+
+							dialog.dismiss();
+
+							Toast toast = Toast.makeText(getApplicationContext(),
+									exceptionText, Toast.LENGTH_LONG);
+							toast.show();
+						}
+					});
+				}
+			};
+		};
+		updater.start();
 	}
 }
