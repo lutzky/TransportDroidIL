@@ -45,7 +45,7 @@ public class RealtimeBusActivity extends Activity implements OnItemSelectedListe
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	private ScheduledFuture<?> scheduledUpdate;
 	private SimpleAdapter listAdapter;
-	private SpinnerAdapter variantAdapter;
+	private SimpleCursorAdapter variantAdapter;
 	private SQLiteDatabase database;
 	private String company;
 	private String routeId;
@@ -76,10 +76,11 @@ public class RealtimeBusActivity extends Activity implements OnItemSelectedListe
 						"variant_index");
 				variantAdapter = new SimpleCursorAdapter(
 						this, 
-						android.R.layout.simple_spinner_dropdown_item, 
+						android.R.layout.simple_spinner_item, 
 						variantCursor, 
 						new String[] { "variant" }, 
 						new int[] { android.R.id.text1 });
+				variantAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				Spinner variantSpinner = (Spinner) findViewById(R.id.variantSpinner);
 				variantSpinner.setAdapter(variantAdapter);
 				variantSpinner.setOnItemSelectedListener(this);
