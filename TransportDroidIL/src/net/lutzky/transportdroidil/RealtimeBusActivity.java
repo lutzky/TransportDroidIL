@@ -22,23 +22,34 @@ import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.opengl.Visibility;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RealtimeBusActivity extends Activity {
+public class RealtimeBusActivity extends Activity implements OnItemSelectedListener {
 	private RealtimeBusUpdater model = null;
 	private ScheduledThreadPoolExecutor timer;
 	private Exception lastException;
 	private final DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	private ScheduledFuture<?> scheduledUpdate;
 	private SimpleAdapter listAdapter;
+	private SpinnerAdapter variantAdapter;
+	private SQLiteDatabase database;
+	private String company;
+	private String routeId;
+	private String number;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +59,39 @@ public class RealtimeBusActivity extends Activity {
 		
 		Intent intent = getIntent();
 		if (intent != null) {
-			String company = intent.getExtras().getString("company");
-			String routeId = intent.getExtras().getString("routeId");
-			if ("OmniExpress".equals(company))
+			String provider = intent.getExtras().getString("provider");
+			company = intent.getExtras().getString("company");
+			routeId = intent.getExtras().getString("routeId");
+			number = intent.getExtras().getString("number");
+			if ("OmniExpress".equals(provider)) {
 				model = new OmniExpBusUpdater(routeId);
-			else if ("MockCompany".equals(company))
+				database = (new RealtimeRoutesOpenHelper(this)).getReadableDatabase();
+				Cursor variantCursor = database.query(
+						"routes", 
+						new String[] { "variant", "id", "variant_index as _id" }, 
+						"number = ? and company = ?", 
+						new String[] { number, company },
+						null, 
+						null, 
+						"variant_index");
+				variantAdapter = new SimpleCursorAdapter(
+						this, 
+						android.R.layout.simple_spinner_dropdown_item, 
+						variantCursor, 
+						new String[] { "variant" }, 
+						new int[] { android.R.id.text1 });
+				Spinner variantSpinner = (Spinner) findViewById(R.id.variantSpinner);
+				variantSpinner.setAdapter(variantAdapter);
+				variantSpinner.setOnItemSelectedListener(this);
+
+			}
+			else if ("MockCompany".equals(provider))
 				model = new MockRealtimeBusUpdater();
 		}
 		timer = new ScheduledThreadPoolExecutor(1);
 		
 		ListView lv = (ListView) findViewById(R.id.realtimeUpdateListView);
-		lv.addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));
+		lv.addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));		
 	}
 	
 	@Override
@@ -86,8 +119,10 @@ public class RealtimeBusActivity extends Activity {
 	}
 	
 	private void stopUpdates() {
-		scheduledUpdate.cancel(true);
-		scheduledUpdate = null;
+		if (scheduledUpdate != null) {
+			scheduledUpdate.cancel(true);
+			scheduledUpdate = null;
+		}
 	}
 	
 	private void update(Handler handler) {
@@ -158,14 +193,21 @@ public class RealtimeBusActivity extends Activity {
 
 		
 		TextView lastUpdate = (TextView) findViewById(R.id.lastUpdateTextView);
-		lastUpdate.setText(getString(R.string.last_update) + timeFormat.format(model.getLastUpdateTime()));
+		Date lastUpdateTime = model.getLastUpdateTime();
+		if (lastUpdateTime != null)
+			lastUpdate.setText(getString(R.string.last_update) + timeFormat.format(lastUpdateTime));
+		else
+			lastUpdate.setText("");
 	}
 
 	private List<Map<String, String>> buildRealtimeDataFromModel() {
 		final List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		List<Stop> stops = model.getStops();
+		stops = stops == null ? Collections.<Stop>emptyList() : stops;
 		List<Eta> etas = model.getEtas();
+		etas = etas == null ? Collections.<Eta>emptyList() : etas;
 		List<Bus> buses = model.getBuses();
+		buses = buses == null ? Collections.<Bus>emptyList() : buses;
 
 		List<Entity> allEntities = new ArrayList<Entity>(stops.size() + etas.size() + buses.size());
 		allEntities.addAll(stops);
@@ -256,5 +298,24 @@ public class RealtimeBusActivity extends Activity {
 
 	public RealtimeBusUpdater getModel() {
 		return model;
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		Cursor cursor = (Cursor) variantAdapter.getItem(position);
+		String routeId = cursor.getString(1);
+		if (routeId != this.routeId) {
+			this.routeId = routeId;
+			stopUpdates();
+			model = new OmniExpBusUpdater(routeId);
+			startUpdates();
+		}
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+		
 	}
 }

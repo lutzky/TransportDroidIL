@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Spinner
+        android:id="@+id/variantSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/variant_prompt" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -26,7 +32,6 @@
             android:layout_height="wrap_content"
             android:text="@string/updating"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
     </LinearLayout>
 
     <TextView
@@ -34,12 +39,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/inactive_service"
-        android:textAppearance="?android:attr/textAppearanceMedium" android:visibility="gone"/>
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/realtimeUpdateListView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="wrap_content" >
     </ListView>
 
 </LinearLayout>

@@ -20,7 +20,7 @@ public class RealtimeBusActivityTest extends ActivityInstrumentationTestCase2<Re
 		super.setUp();
 		Intent intent = new Intent(Intent.ACTION_MAIN);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra("company", "MockCompany");
+		intent.putExtra("provider", "MockCompany");
 		intent.putExtra("routeId", "1");
 		setActivityIntent(intent);
 		gotUpdate = false;

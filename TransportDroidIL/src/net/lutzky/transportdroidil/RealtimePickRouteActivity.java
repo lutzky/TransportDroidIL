@@ -58,7 +58,7 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 				String companyName = groupCursor.getString(0);
 				Cursor cursor = database.query(
 						"routes inner join company_names on routes.company = company_names.company", 
-						new String[] { "number", "variant", "id as _id" }, 
+						new String[] { "number", "variant", "id as _id", "routes.company" }, 
 						"company_name = ? and variant_index = 0",
 						new String[] { companyName },
 						null, 
@@ -73,12 +73,13 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
-		Cursor child = (Cursor) adapter.getChild(groupPosition, childPosition);
-		String routeId = child.getString(2);
-		
+		Cursor //group = (Cursor) adapter.getGroup(groupPosition),
+				child = (Cursor) adapter.getChild(groupPosition, childPosition);
 		Intent intent = new Intent(this, RealtimeBusActivity.class);
-		intent.putExtra("company", "OmniExpress");
-		intent.putExtra("routeId", routeId);
+		intent.putExtra("provider", "OmniExpress");
+		intent.putExtra("number", child.getString(0));
+		intent.putExtra("routeId", child.getString(2));
+		intent.putExtra("company", child.getString(3));
 		startActivity(intent);
 		
 		return true;

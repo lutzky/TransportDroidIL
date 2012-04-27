@@ -50,10 +50,5 @@ public class OmniExpRealtimeTest extends TestCase {
 			double pos = bus.getPosition();
 			assertTrue("Invalid bus position", pos >= 0 && pos <= 100);
 		}
-		
-		for (Eta eta : r.getEtas()) {
-			Date lastUpdate = r.getLastUpdateTime();
-			assertTrue("Invalid ETA", eta.getEta().after(lastUpdate));
-		}
 	}
 }
