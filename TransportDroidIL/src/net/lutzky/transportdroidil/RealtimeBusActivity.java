@@ -20,7 +20,7 @@ import net.lutzky.transportdroidil.RealtimeBusUpdater.EntityVisitor;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Eta;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,16 +29,14 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RealtimeBusActivity extends Activity implements OnItemSelectedListener {
+public class RealtimeBusActivity extends ListActivity implements OnItemSelectedListener {
 	private RealtimeBusUpdater model = null;
 	private ScheduledThreadPoolExecutor timer;
 	private Exception lastException;
@@ -55,7 +53,7 @@ public class RealtimeBusActivity extends Activity implements OnItemSelectedListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.realtime_bus);
+		getListView().addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));
 		
 		Intent intent = getIntent();
 		if (intent != null) {
@@ -90,9 +88,6 @@ public class RealtimeBusActivity extends Activity implements OnItemSelectedListe
 				model = new MockRealtimeBusUpdater();
 		}
 		timer = new ScheduledThreadPoolExecutor(1);
-		
-		ListView lv = (ListView) findViewById(R.id.realtimeUpdateListView);
-		lv.addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));		
 	}
 	
 	@Override
@@ -183,14 +178,13 @@ public class RealtimeBusActivity extends Activity implements OnItemSelectedListe
 				model.isServiceActive() ? View.GONE : View.VISIBLE);
 		
 		List<Map<String, String>> data = buildRealtimeDataFromModel();
-		ListView lv = (ListView) findViewById(R.id.realtimeUpdateListView);
 		listAdapter = new SimpleAdapter(
 				this, 
 				data, 
 				R.layout.realtime_bus_table_item, 
 				new String[] { "stop", "eta-up", "eta-down", "bus-up", "bus-down" }, 
 				new int[] { R.id.stop, R.id.eta_up, R.id.eta_down, R.id.bus_up, R.id.bus_down });
-		lv.setAdapter(listAdapter);
+		setListAdapter(listAdapter);
 
 		
 		TextView lastUpdate = (TextView) findViewById(R.id.lastUpdateTextView);
