@@ -19,6 +19,21 @@ in implementation, it's not a lot of extra work. Any information reported by
 the application comes from those two sites, so we support whatever queries they
 do. Also, for convenience, there's a history-based autocompleter.
 
+Realtime bus location updates are available for the following companies:
+
+ * [Nazeret United Bus Services](http://nazareth-unbs.com)
+ * [Nazeret Transport and Tourism](http://ntt-buses.com)
+ * [Omni Express](http://omniexp.co.il)
+ * [Nativ Express](http://nateevexpress.com)
+
+These companies share the technology for realtime bus location updates, which
+can be used through their respective websites, and now through TransportDroidIL.
+Note that TransportDroidIL takes data intended for
+display on Internet Explorer, which isn't under our control and attempts to
+display it on your phone. In spite our best effort, this process is prone to
+errors, so we can not be responsible if you are late to an important meeting
+with your boss...
+
 License
 -------
 
