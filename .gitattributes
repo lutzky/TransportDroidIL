@@ -1,0 +1,2 @@
+*.java whitespace=-blank-at-eol
+*.xml whitespace=-blank-at-eol
