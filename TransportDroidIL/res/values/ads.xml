@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="useAds" format="boolean" type="bool">true</item>
+    <string name="adUnitId">a15025374f67398</string>
+</resources>

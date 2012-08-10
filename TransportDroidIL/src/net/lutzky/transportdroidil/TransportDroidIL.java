@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,10 +19,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView.FindListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.ads.*;
 
 public class TransportDroidIL extends Activity implements InteractiveLinkClicked {
 	private static final String TAG = "TransportDroidIL";
@@ -31,6 +35,8 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	
 	private final BusGovIlGetter motBg = new BusGovIlGetter();
 	private final EggedGetter eggedBg = new EggedGetter();
+	
+	private AdView adView;
 
 	private void setButtonsEnabled(boolean enabled) {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -144,6 +150,21 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
 		tvQueryResult.setText(Html.fromHtml(getPreferences(0).getString("Result", "")));
 		tvQueryResult.setMovementMethod(new LinkMovementMethod());
+		
+		showAds();
+	}
+	
+	private void showAds() {
+		Resources res = getResources();
+		if (res.getBoolean(R.bool.useAds) == false) {
+			return;
+		}
+		adView = new AdView(this, AdSize.BANNER, res.getString(R.string.adUnitId));
+		LinearLayout layout = (LinearLayout)findViewById(R.id.mainLayout);
+		layout.addView(adView);
+		AdRequest adRequest = new AdRequest();
+		adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+		adView.loadAd(adRequest);
 	}
 
 	private void updateLocationProgress(AutolocationTextView.State state) {
@@ -162,6 +183,14 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 			setButtonsEnabled(true);
 			break;
 		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		if (adView != null) {
+			adView.destroy();
+		}
+		super.onDestroy();
 	}
 
 	@Override
