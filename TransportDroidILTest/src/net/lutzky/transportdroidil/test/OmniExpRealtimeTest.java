@@ -2,7 +2,6 @@ package net.lutzky.transportdroidil.test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -10,7 +9,6 @@ import org.apache.http.client.ClientProtocolException;
 import net.lutzky.transportdroidil.OmniExpBusUpdater;
 import net.lutzky.transportdroidil.RealtimeBusUpdater;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Bus;
-import net.lutzky.transportdroidil.RealtimeBusUpdater.Eta;
 import net.lutzky.transportdroidil.RealtimeBusUpdater.Stop;
 import junit.framework.TestCase;
 

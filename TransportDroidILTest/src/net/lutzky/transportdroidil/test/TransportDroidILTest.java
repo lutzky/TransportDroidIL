@@ -11,7 +11,7 @@ import android.test.UiThreadTest;
 public class TransportDroidILTest extends ActivityInstrumentationTestCase2<TransportDroidIL> {
 
 	public TransportDroidILTest() {
-		super("net.lutzky.transportdroidil", TransportDroidIL.class);
+		super(TransportDroidIL.class);
 	}
 	
 	@UiThreadTest

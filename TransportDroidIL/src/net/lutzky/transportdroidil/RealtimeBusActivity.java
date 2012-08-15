@@ -48,7 +48,14 @@ public class RealtimeBusActivity extends ListActivity implements OnItemSelectedL
 	private String company;
 	private String routeId;
 	private String number;
-	
+
+	/*
+	 * The SimpleCursorAdapter constructor we use is deprecated, but the
+	 * non-deprecated one is only supported from API 11. (non-Javadoc)
+	 * 
+	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
+	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

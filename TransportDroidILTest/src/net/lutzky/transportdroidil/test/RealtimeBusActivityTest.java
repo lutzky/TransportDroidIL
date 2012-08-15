@@ -12,7 +12,7 @@ public class RealtimeBusActivityTest extends ActivityInstrumentationTestCase2<Re
 	private RealtimeBusActivity activity;
 
 	public RealtimeBusActivityTest() {
-		super("net.lutzky.transportdroidil", RealtimeBusActivity.class);
+		super(RealtimeBusActivity.class);
 	}
 	
 	@Override
