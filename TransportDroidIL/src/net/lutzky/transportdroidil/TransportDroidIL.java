@@ -45,7 +45,7 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 
 	private void updateResultText(Spanned result) {
 		SharedPreferences.Editor editor = getPreferences(0).edit();
-		editor.putString("Result", result.toString());
+		editor.putString("Result", Html.toHtml(result));
 		editor.commit();
 		TextView tv = (TextView)findViewById(R.id.query_result);
 		tv.setText(result);
