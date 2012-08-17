@@ -39,4 +39,5 @@
 <string name="variant_prompt">בחר אלטרנטיבה</string>
 <string name="pref:autolocate:summary">האם להפעיל חיפוש מיקום נוכחי מיד בפתיחת האפליקציה</string>
 <string name="pref:autolocate:title">מלא שדה \&quot;מוצא\&quot; אוטומטית</string>
+<string name="copy">העתק</string>
 </resources>

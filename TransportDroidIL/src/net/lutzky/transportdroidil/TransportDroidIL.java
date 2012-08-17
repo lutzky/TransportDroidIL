@@ -4,6 +4,7 @@ import net.lutzky.transportdroidil.AutolocationTextView.State;
 import net.lutzky.transportdroidil.BusGetter.InteractiveLinkClicked;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.text.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -14,6 +15,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -150,7 +153,26 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		tvQueryResult.setText(Html.fromHtml(getPreferences(0).getString("Result", "")));
 		tvQueryResult.setMovementMethod(new LinkMovementMethod());
 		
+		registerForContextMenu(tvQueryResult);
+		
 		showAds();
+	}
+	
+	@SuppressWarnings("deprecation")
+	/*
+	 * Deprecation warnings suppressed for use of old CliboardManager API. We
+	 * still support gingerbread. (non-Javadoc)
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
+		
+		if (v == tvQueryResult) {
+		    menu.add(0, v.getId(), 0, R.string.copy);
+	
+		    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+		    clipboard.setText(tvQueryResult.getText());
+		}
 	}
 	
 	private void showAds() {
