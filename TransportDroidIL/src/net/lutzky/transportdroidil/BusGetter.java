@@ -109,17 +109,6 @@ public abstract class BusGetter {
 		if (filteredResult == null) {
 			Log.d(TAG, "Filtering: " + getHtmlResult());
 			Spanned temp = Html.fromHtml(getHtmlResult()
-//				.replace("<br>", "\n")
-//				.replace("<p>", "\n")
-//				.replace("<li>", "\n * ")
-//				.replace("&nbsp", " ")
-//				.replace("<BUS>", "")
-//				.replace("</BUS>", "")
-//				.replace("<COMPANY>", "")
-//				.replace("</COMPANY>", "")
-//				.replaceAll(" *(,? ) *", "$1")
-//				.replaceAll("^\n+", "")
-//				.replaceAll("(\n ?)+","\n");
 					, null, new TagHandler() {
 						@Override
 						public void handleTag(boolean opening, String tag, Editable output,
@@ -129,7 +118,7 @@ public abstract class BusGetter {
 								processBus(opening, output);
 							else if (opening) {
 								if (tag.equals("li"))
-									output.append("\n * ");
+									output.append("\n • ");
 								else
 									Log.d(TAG, "Found tag: " + tag);
 							}
