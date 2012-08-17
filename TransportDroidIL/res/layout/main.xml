@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_height="fill_parent" android:layout_width="fill_parent"
-    android:id="@+id/mainLayout" 
-    >
-<ScrollView
-	android:layout_width="fill_parent"
-	android:layout_height="0dip"
-	android:layout_weight="1"
-	>
-    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout1">
-        <net.lutzky.transportdroidil.QueryView android:id="@+id/queryview" android:layout_width="fill_parent" android:layout_height="wrap_content"></net.lutzky.transportdroidil.QueryView>
-        <TextView android:layout_width="fill_parent" android:id="@+id/query_result" android:textSize="20sp" android:layout_height="wrap_content" android:paddingRight="5sp"></TextView>
-    </LinearLayout>
-</ScrollView>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!-- Parent is not useless, an ad may or may not get inserted. -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        tools:ignore="UselessParent" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <net.lutzky.transportdroidil.QueryView
+                android:id="@+id/queryview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+            </net.lutzky.transportdroidil.QueryView>
+
+            <TextView
+                android:id="@+id/query_result"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="5sp"
+                android:textSize="20sp" >
+            </TextView>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
