@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference android:key="provider" android:title="@string/provider_pref" android:entryValues="@array/provider_values" android:entries="@array/providers_names" android:defaultValue="mot"></ListPreference>
-    <CheckBoxPreference android:key="rtl_fix" android:summary="@string/rtl_fix_summary" android:title="@string/rtl_fix" android:defaultValue="false"></CheckBoxPreference>
-    <CheckBoxPreference android:key="bidi_numbers_fix" android:title="@string/bidi_numbers_fix" android:summary="@string/bidi_numbers_fix_summary" android:defaultValue="false"></CheckBoxPreference><CheckBoxPreference android:title="@string/clear_completions" android:summary="@string/clear_completions_summary" android:defaultValue="false" android:key="clear_completions"></CheckBoxPreference>
-    
-    
+    <ListPreference android:key="provider" android:title="@string/provider_pref" android:entryValues="@array/provider_values" android:entries="@array/providers_names" android:defaultValue="mot"/>
+    <CheckBoxPreference android:key="rtl_fix" android:summary="@string/rtl_fix_summary" android:title="@string/rtl_fix" android:defaultValue="false"/>
+    <CheckBoxPreference android:key="autolocate" android:title="@string/pref:autolocate:title" android:defaultValue="false" android:summary="@string/pref:autolocate:summary"/>
+    <CheckBoxPreference android:key="bidi_numbers_fix" android:title="@string/bidi_numbers_fix" android:summary="@string/bidi_numbers_fix_summary" android:defaultValue="false"/>
+    <CheckBoxPreference android:title="@string/clear_completions" android:summary="@string/clear_completions_summary" android:defaultValue="false" android:key="clear_completions"/>
 </PreferenceScreen>

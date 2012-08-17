@@ -31,10 +31,12 @@
 <string name="realtime_bus_menu_item">עדכוני זמן-אמת</string>
 <string name="bus_is_here">האוטובוס כאן</string>
 <string name="next_bus_at_time">האוטובוס הבא בשעה</string>
-<string name="updating">מעדכן ...</string>
+<string name="updating">מעדכן…</string>
 <string name="last_update">עודכן לאחרונה ב-</string>
 <string name="stops">תחנות:</string>
 <string name="inactive_service">השירות להיום הסתיים</string>
 <string name="refresh">רענן</string>
 <string name="variant_prompt">בחר אלטרנטיבה</string>
+<string name="pref:autolocate:summary">האם להפעיל חיפוש מיקום נוכחי מיד בפתיחת האפליקציה</string>
+<string name="pref:autolocate:title">מלא שדה \&quot;מוצא\&quot; אוטומטית</string>
 </resources>

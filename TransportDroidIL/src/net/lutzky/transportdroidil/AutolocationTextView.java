@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -43,6 +45,7 @@ public class AutolocationTextView extends EnhancedTextView {
 
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
 		if (isInEditMode()) {
 			triangulator = null;
@@ -51,8 +54,13 @@ public class AutolocationTextView extends EnhancedTextView {
 			triangulator = new Triangulator(context);
 			geo = new Geocoder(getContext(), new Locale("he"));
 		}
-
-		startSearch();
+		
+		if (settings.getBoolean("autolocate", false)) {
+			startSearch();
+		}
+		else {
+			markAsCustom();
+		}
 	}
 
 	public void onStateChange(StateChangeCallback cb) {
