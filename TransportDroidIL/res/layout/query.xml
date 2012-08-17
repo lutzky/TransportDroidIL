@@ -12,25 +12,32 @@
     <ImageButton
         android:id="@+id/locate_me"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="fill_parent"
         android:contentDescription="@string/find_location"
+        android:scaleType="centerInside"
         android:src="@android:drawable/ic_menu_mylocation" />
 
     <ProgressBar
       android:layout_height="fill_parent"
-      android:layout_width="wrap_content"
+      android:layout_width="50dp"
       android:visibility="visible" android:id="@+id/location_progress"
       android:layout_gravity="center_vertical"
       />
+
     <net.lutzky.transportdroidil.AutolocationTextView
-      android:ellipsize="start" android:layout_height="fill_parent"
-      android:layout_width="fill_parent" android:hint="@string/query_from_hint"
-      android:selectAllOnFocus="true" android:completionThreshold="1"
-      android:completionHint="@string/query_from_hint" android:id="@+id/query_from"
-      app:preferences_field_name="autocomplete-places"
-      android:inputType="textNoSuggestions"
-      android:imeOptions="actionNext">
+        android:id="@+id/query_from"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:completionHint="@string/query_from_hint"
+        android:completionThreshold="1"
+        android:ellipsize="start"
+        android:hint="@string/query_from_hint"
+        android:imeOptions="actionNext"
+        android:inputType="textNoSuggestions"
+        android:selectAllOnFocus="true"
+        app:preferences_field_name="autocomplete-places" >
+
     </net.lutzky.transportdroidil.AutolocationTextView>
   </LinearLayout>
   <LinearLayout
@@ -40,13 +47,12 @@
     <ImageButton
         android:id="@+id/reverse"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
         android:adjustViewBounds="false"
         android:contentDescription="@string/reverse_direction"
         android:cropToPadding="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerInside"
         android:src="@android:drawable/ic_media_rew" />
 
     <net.lutzky.transportdroidil.EnhancedTextView
