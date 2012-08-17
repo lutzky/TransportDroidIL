@@ -4,7 +4,6 @@
     <string name="app_name">Transport Droid IL</string>
 
 <string name="error">לא הולך: %s</string>
-<string name="please_wait">אנא המתן</string>
 <string name="query_from_hint">המוצא לנסיעתך</string>
 <string name="query_to_hint">היעד שלך</string>
 <string name="query_time_hint">מתי? (לא חובה)</string>
@@ -29,11 +28,8 @@
 <string name="bidi_numbers_fix">תיקון היפוך מספרים</string>
 <string name="bidi_numbers_fix_summary">שנה את הסימון בתיבה זו אם מספרים (קווים, שעות, תאריכים) מופיעים הפוך</string>
 <string name="realtime_bus_menu_item">עדכוני זמן-אמת</string>
-<string name="bus_is_here">האוטובוס כאן</string>
-<string name="next_bus_at_time">האוטובוס הבא בשעה</string>
 <string name="updating">מעדכן…</string>
 <string name="last_update">עודכן לאחרונה ב-</string>
-<string name="stops">תחנות:</string>
 <string name="inactive_service">השירות להיום הסתיים</string>
 <string name="refresh">רענן</string>
 <string name="variant_prompt">בחר אלטרנטיבה</string>
