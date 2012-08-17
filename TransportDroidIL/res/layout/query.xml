@@ -8,10 +8,15 @@
   <LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="fill_parent">
-    <ImageButton android:src="@drawable/location"
-      android:id="@+id/locate_me"
-      android:contentDescription="@string/find_location"
-      android:layout_width="wrap_content" android:layout_height="fill_parent" />
+
+    <ImageButton
+        android:id="@+id/locate_me"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/find_location"
+        android:src="@android:drawable/ic_menu_mylocation" />
+
     <ProgressBar
       android:layout_height="fill_parent"
       android:layout_width="wrap_content"
@@ -24,22 +29,32 @@
       android:selectAllOnFocus="true" android:completionThreshold="1"
       android:completionHint="@string/query_from_hint" android:id="@+id/query_from"
       app:preferences_field_name="autocomplete-places"
+      android:inputType="textNoSuggestions"
       android:imeOptions="actionNext">
     </net.lutzky.transportdroidil.AutolocationTextView>
   </LinearLayout>
   <LinearLayout
     android:layout_height="wrap_content"
     android:layout_width="fill_parent">
-    <ImageButton android:src="@drawable/loopback"
-      android:scaleType="fitCenter" android:cropToPadding="true"
-      android:id="@+id/reverse"
-      android:contentDescription="@string/reverse_direction"
-      android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/reverse"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/reverse_direction"
+        android:cropToPadding="true"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/ic_media_rew" />
+
     <net.lutzky.transportdroidil.EnhancedTextView
       android:ellipsize="start" android:layout_height="wrap_content"
       android:layout_width="fill_parent" android:hint="@string/query_to_hint"
       android:selectAllOnFocus="true" android:completionThreshold="1"
       android:completionHint="@string/query_to_hint" android:id="@+id/query_to"
+      android:inputType="textNoSuggestions"
       app:preferences_field_name="autocomplete-places"
       android:imeOptions="actionNext" />
   </LinearLayout>
@@ -59,6 +74,7 @@
       android:layout_width="fill_parent" android:selectAllOnFocus="true"
       android:ellipsize="start" android:hint="@string/query_time_hint"
       app:preferences_field_name="autocomplete-time"
+      android:inputType="textNoSuggestions"
       android:imeOptions="actionSearch">
     </net.lutzky.transportdroidil.EnhancedTextView>
   </LinearLayout>

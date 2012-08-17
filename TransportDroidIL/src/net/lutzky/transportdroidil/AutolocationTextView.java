@@ -53,13 +53,13 @@ public class AutolocationTextView extends EnhancedTextView {
 		} else {
 			triangulator = new Triangulator(context);
 			geo = new Geocoder(getContext(), new Locale("he"));
-		}
 		
-		if (settings.getBoolean("autolocate", false)) {
-			startSearch();
-		}
-		else {
-			markAsCustom();
+			if (settings.getBoolean("autolocate", false)) {
+				startSearch();
+			}
+			else {
+				markAsCustom();
+			}
 		}
 	}
 
@@ -95,7 +95,7 @@ public class AutolocationTextView extends EnhancedTextView {
 			setTextColor(getResources().getColor(R.color.auto_location));
 			break;
 		case CUSTOM:
-			setTextColor(getResources().getColor(android.R.color.primary_text_light));
+			setTextColor(getResources().getColor(android.R.color.primary_text_dark));
 		}
 	}
 
