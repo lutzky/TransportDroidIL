@@ -36,17 +36,13 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		// Share the list of completion options.
 		getToTextView().setCompletionOptions(getFromTextView().getCompletionOptions());
 
-		final Button submit_egged = (Button) findViewById(R.id.submit_egged);
-		final Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
+		final Button submit = (Button) findViewById(R.id.submit);
 
 		getTimeTextView().setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int action, KeyEvent event) {
 				if (action == EditorInfo.IME_ACTION_SEARCH) {
-					if (submit_busgovil.getVisibility() == VISIBLE)
-						onClick(submit_busgovil);
-					else if (submit_egged.getVisibility() == VISIBLE)
-						onClick(submit_egged);
+					onClick(submit);
 					return true;
 				}
 				return false;
@@ -77,8 +73,7 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 			}
 		});
 
-		submit_egged.setOnClickListener(this);
-		submit_busgovil.setOnClickListener(this);
+		submit.setOnClickListener(this);
 	}
 
 	public void savePersistentState(SharedPreferences settings) {
@@ -108,11 +103,9 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	}
 
 	public void setButtonsEnabled(boolean enabled) {
-		Button submit_egged = (Button) findViewById(R.id.submit_egged);
-		Button submit_busgovil = (Button) findViewById(R.id.submit_busgovil);
+		Button submit = (Button) findViewById(R.id.submit);
 
-		submit_egged.setEnabled(enabled);
-		submit_busgovil.setEnabled(enabled);
+		submit.setEnabled(enabled);
 	}
 
 	EnhancedTextView getFromTextView() {
@@ -127,17 +120,21 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		return (EnhancedTextView) findViewById(R.id.query_time);
 	}
 
-	public void setProvider(String provider) {
-		Button motButton = (Button) findViewById(R.id.submit_busgovil),
-			   eggedButton = (Button) findViewById(R.id.submit_egged);
-		if (provider.equals("mot")) {
-			motButton.setVisibility(VISIBLE);
-			eggedButton.setVisibility(GONE);
+	public void setProvider(TransportDroidIL.Provider provider) {
+		Button submitButton = (Button) findViewById(R.id.submit);
+		int newIconId = 0;
+		
+		switch(provider) {
+		case MOT:
+			newIconId = R.drawable.mot;
+			break;
+		case EGGED:
+			newIconId = R.drawable.egged;
+			break;
+		default:
+			throw new IllegalArgumentException("Got invalid provider " + provider);
 		}
-		else if (provider.equals("egged")) {
-			motButton.setVisibility(GONE);
-			eggedButton.setVisibility(VISIBLE);
-		}
+		submitButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, newIconId, 0);
 	}
 
 	@Override
@@ -150,11 +147,11 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 
 		if (onSearchButtonClickListener != null) {
 			imm.hideSoftInputFromWindow(getFromTextView().getWindowToken(), 0);
-			onSearchButtonClickListener.onSearchButtonClick(QueryView.this, v.getId());
+			onSearchButtonClickListener.onSearchButtonClick(QueryView.this);
 		}
 	}
 }
 
 interface OnSearchButtonClickListener {
-	void onSearchButtonClick(View source, int provider);
+	void onSearchButtonClick(View source);
 }

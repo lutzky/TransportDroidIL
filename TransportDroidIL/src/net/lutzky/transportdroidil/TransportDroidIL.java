@@ -39,6 +39,9 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	private final EggedGetter eggedBg = new EggedGetter();
 	
 	private AdView adView;
+	
+	public enum Provider { EGGED, MOT };
+	Provider provider = Provider.MOT;
 
 	private void setButtonsEnabled(boolean enabled) {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
@@ -129,13 +132,13 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		queryView.loadPersistentState(getPreferences(0));
 		queryView.setOnSearchButtonClickListener(new OnSearchButtonClickListener() {
 			@Override
-			public void onSearchButtonClick(View source, int provider) {
-				if (provider == R.id.submit_egged) {
+			public void onSearchButtonClick(View source) {
+				switch(provider) {
+				case EGGED:
 					runQuery(eggedBg, 0);
-				} else if (provider == R.id.submit_busgovil) {
+				case MOT:
 					runQuery(motBg, 0);
 				}
-
 			}
 		});
 
@@ -255,12 +258,23 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		applyPreferences();
 	}
-
+	
 	private void applyPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		String provider = settings.getString("provider", "mot");
-		Log.d(TAG, "Got provider=" + provider + ", updating query view.");
+		String stored_provider_name = settings.getString("provider", "mot");
+		
+		if (stored_provider_name.equals("egged")) {
+			provider = Provider.EGGED;
+		}
+		else if (stored_provider_name.equals("mot")) {
+			provider = Provider.MOT;
+		}
+		else {
+			Log.w(TAG, "Invalid provider stored in preferences: " + provider);
+			Log.w(TAG, "Using provider " + provider.name() + " instead.");
+		}
+		
 		getQueryView().setProvider(provider);
 
 		TextView tv = (TextView)findViewById(R.id.query_result);
