@@ -23,11 +23,11 @@
 
     <TextView
         android:id="@+id/stop"
-        android:layout_width="fill_parent"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="5px"
-        android:layout_marginRight="5px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="1.61"
         android:text="@string/realtime_stop"
         android:textAppearance="?android:attr/textAppearanceMedium" />
