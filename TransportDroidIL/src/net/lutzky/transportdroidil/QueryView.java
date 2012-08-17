@@ -26,9 +26,9 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 		inflate(context, R.layout.query, this);
 
 		ArrayAdapter<String> placesAdapter = new ArrayAdapter<String>(context,
-				R.layout.list_item);
+				android.R.layout.select_dialog_item);
 		ArrayAdapter<String> timeAdapter = new ArrayAdapter<String>(context,
-				R.layout.list_item);
+				android.R.layout.select_dialog_item);
 		getFromTextView().setAdapter(placesAdapter);
 		getToTextView().setAdapter(placesAdapter);
 		getTimeTextView().setAdapter(timeAdapter);

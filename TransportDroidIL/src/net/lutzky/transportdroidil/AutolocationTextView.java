@@ -32,6 +32,7 @@ public class AutolocationTextView extends EnhancedTextView {
 	private final Geocoder geo;
 	private String addressString; // Used to communicate between threads
 	private Thread geocoderThread = null;
+	private int initialColor;
 
 	// Starting search mode changes the text, but that's us - not the user, so
 	// don't count that as a reason to set state to CUSTOM again.
@@ -42,9 +43,12 @@ public class AutolocationTextView extends EnhancedTextView {
 	public State getState() {
 		return state;
 	}
-
+	
 	public AutolocationTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		this.initialColor = getCurrentTextColor();
+		
 		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
 		if (isInEditMode()) {
@@ -95,7 +99,7 @@ public class AutolocationTextView extends EnhancedTextView {
 			setTextColor(getResources().getColor(R.color.auto_location));
 			break;
 		case CUSTOM:
-			setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+			setTextColor(initialColor);
 		}
 	}
 
