@@ -29,6 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.ads.*;
 
+/*
+ * Deprecation warnings suppressed for use of old CliboardManager API. We
+ * still support gingerbread. (non-Javadoc)
+ */
+@SuppressWarnings("deprecation")
 public class TransportDroidIL extends Activity implements InteractiveLinkClicked {
 	private static final String TAG = "TransportDroidIL";
 
@@ -161,11 +166,6 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		showAds();
 	}
 	
-	@SuppressWarnings("deprecation")
-	/*
-	 * Deprecation warnings suppressed for use of old CliboardManager API. We
-	 * still support gingerbread. (non-Javadoc)
-	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
