@@ -37,7 +37,14 @@
 <string name="inactive_service">השירות להיום הסתיים</string>
 <string name="refresh">רענן</string>
 <string name="variant_prompt">בחר אלטרנטיבה</string>
-<string name="pref:autolocate:summary">האם להפעיל חיפוש מיקום נוכחי מיד בפתיחת האפליקציה</string>
-<string name="pref:autolocate:title">מלא שדה \&quot;מוצא\&quot; אוטומטית</string>
+<string name="pref_autolocate_summary">האם להפעיל חיפוש מיקום נוכחי מיד בפתיחת האפליקציה</string>
+<string name="pref_autolocate_title">מלא שדה \&quot;מוצא\&quot; אוטומטית</string>
 <string name="copy">העתק</string>
+<string name="realtime_eta_up">חזור</string>
+<string name="realtime_stop_name">שם התחנה</string>
+<string name="realtime_eta_down">הלוך</string>
+<string name="blank_time">00:00</string>
+<string name="realtime_stop">תחנה</string>
+<string name="find_location">אתר מיקום</string>
+<string name="reverse_direction">הפוך כיוון</string>
 </resources>

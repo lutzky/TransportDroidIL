@@ -10,6 +10,7 @@
     android:layout_width="fill_parent">
     <ImageButton android:src="@drawable/location"
       android:id="@+id/locate_me"
+      android:contentDescription="@string/find_location"
       android:layout_width="wrap_content" android:layout_height="fill_parent" />
     <ProgressBar
       android:layout_height="fill_parent"
@@ -32,6 +33,7 @@
     <ImageButton android:src="@drawable/loopback"
       android:scaleType="fitCenter" android:cropToPadding="true"
       android:id="@+id/reverse"
+      android:contentDescription="@string/reverse_direction"
       android:layout_width="wrap_content" android:layout_height="wrap_content" />
     <net.lutzky.transportdroidil.EnhancedTextView
       android:ellipsize="start" android:layout_height="wrap_content"

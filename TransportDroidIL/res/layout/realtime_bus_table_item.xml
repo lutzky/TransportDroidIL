@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:lines="1"
-        android:text="00:00"
+        android:text="@string/blank_time"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -29,7 +29,7 @@
         android:layout_marginLeft="5px"
         android:layout_marginRight="5px"
         android:layout_weight="1.61"
-        android:text="תחנה"
+        android:text="@string/realtime_stop"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:lines="1"
-        android:text="00:00"
+        android:text="@string/blank_time"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
