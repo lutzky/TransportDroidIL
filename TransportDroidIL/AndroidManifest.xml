@@ -15,9 +15,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="Preferences" android:label="@string/preferences" android:icon="@android:drawable/ic_menu_preferences"></activity>
-        <activity android:name="net.lutzky.transportdroidil.RealtimeBusActivity" android:label="@string/realtime_bus_menu_item"></activity>
-        <activity android:name="RealtimePickRouteActivity"></activity>
+        <activity android:name="Preferences" android:label="@string/preferences" />
+        <activity android:name="net.lutzky.transportdroidil.RealtimeBusActivity" android:label="@string/realtime_bus_menu_item" />
+        <activity android:name="RealtimePickRouteActivity" />
         <activity android:name="com.google.ads.AdActivity"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
