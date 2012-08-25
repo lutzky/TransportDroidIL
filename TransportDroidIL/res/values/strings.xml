@@ -43,4 +43,7 @@
 <string name="realtime_stop">תחנה</string>
 <string name="find_location">אתר מיקום</string>
 <string name="reverse_direction">הפוך כיוון</string>
+<string name="how_much_time_query_suffix">כמה זמן</string>
+<string name="how_much_time_pref">בקש הערכת זמנים</string>
+<string name="how_much_time_pref_desc">מוסיף את המילים \&quot;כמה זמן\&quot; לסוף השאילתה</string>
 </resources>

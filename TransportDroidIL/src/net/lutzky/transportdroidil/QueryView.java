@@ -2,6 +2,7 @@ package net.lutzky.transportdroidil;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 public class QueryView extends LinearLayout implements View.OnClickListener {
 	private OnSearchButtonClickListener onSearchButtonClickListener = null;
+	protected SharedPreferences settings = null;
 
 	public void setOnSearchButtonClickListener(
 			OnSearchButtonClickListener onSearchButtonClickListener) {
@@ -24,6 +26,8 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	public QueryView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		inflate(context, R.layout.query, this);
+		
+		settings = PreferenceManager.getDefaultSharedPreferences(context);
 
 		ArrayAdapter<String> placesAdapter = new ArrayAdapter<String>(context,
 				android.R.layout.select_dialog_item);
@@ -95,11 +99,28 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 	}
 
 	public String getQueryString() {
+		final char Lamed = '\u05dc';
 		String from = getFromTextView().getString();
 		String to = getToTextView().getString();
 		String time = getTimeTextView().getString();
-
-		return from + " \u05dc" + to + " " + time; // lamed in unicode escape
+		
+		StringBuilder queryString = new StringBuilder();
+		queryString.append(from);
+		queryString.append(" ");
+		queryString.append(Lamed);
+		queryString.append(to);
+		
+		if (time.length() > 0) {
+			queryString.append(" ");
+			queryString.append(time);
+		}
+		
+		if (settings.getBoolean("how_much_time", true)) {
+			queryString.append(" ");
+			queryString.append(getResources().getString(R.string.how_much_time_query_suffix));
+		}
+		
+		return queryString.toString();
 	}
 
 	public void setButtonsEnabled(boolean enabled) {

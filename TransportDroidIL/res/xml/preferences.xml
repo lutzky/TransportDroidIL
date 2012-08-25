@@ -6,4 +6,5 @@
     <CheckBoxPreference android:key="autolocate" android:title="@string/pref_autolocate_title" android:defaultValue="false" android:summary="@string/pref_autolocate_summary"/>
     <CheckBoxPreference android:key="bidi_numbers_fix" android:title="@string/bidi_numbers_fix" android:summary="@string/bidi_numbers_fix_summary" android:defaultValue="false"/>
     <CheckBoxPreference android:title="@string/clear_completions" android:summary="@string/clear_completions_summary" android:defaultValue="false" android:key="clear_completions"/>
+    <CheckBoxPreference android:key="how_much_time" android:summary="@string/how_much_time_pref_desc" android:title="@string/how_much_time_pref" android:defaultValue="true"/>
 </PreferenceScreen>
