@@ -1,5 +1,7 @@
 package net.lutzky.transportdroidil;
 
+import java.util.Locale;
+
 import net.lutzky.transportdroidil.AutolocationTextView.State;
 import net.lutzky.transportdroidil.BusGetter.InteractiveLinkClicked;
 import android.app.Activity;
@@ -7,6 +9,7 @@ import android.app.ProgressDialog;
 import android.text.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -126,6 +129,8 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setLocale();
 
 		setContentView(R.layout.main);
 		
@@ -164,6 +169,15 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		registerForContextMenu(tvQueryResult);
 		
 		showAds();
+	}
+
+	private void setLocale() {
+		Locale locale = new Locale("he");
+		Locale.setDefault(locale);
+		Configuration config = new Configuration();
+		config.locale = locale;
+		getBaseContext().getResources().updateConfiguration(config,
+		      getBaseContext().getResources().getDisplayMetrics());
 	}
 	
 	@Override

@@ -33,6 +33,7 @@
         android:completionThreshold="1"
         android:ellipsize="start"
         android:hint="@string/query_from_hint"
+        android:singleLine="true"
         android:imeOptions="actionNext"
         android:inputType="textNoSuggestions"
         android:selectAllOnFocus="true"
@@ -61,6 +62,7 @@
       android:selectAllOnFocus="true" android:completionThreshold="1"
       android:completionHint="@string/query_to_hint" android:id="@+id/query_to"
       android:inputType="textNoSuggestions"
+      android:singleLine="true"
       app:preferences_field_name="autocomplete-places"
       android:imeOptions="actionNext" />
   </LinearLayout>
@@ -77,6 +79,7 @@
       android:ellipsize="start" android:hint="@string/query_time_hint"
       app:preferences_field_name="autocomplete-time"
       android:inputType="textNoSuggestions"
+      android:singleLine="true"
       android:imeOptions="actionSearch">
     </net.lutzky.transportdroidil.EnhancedTextView>
   </LinearLayout>
