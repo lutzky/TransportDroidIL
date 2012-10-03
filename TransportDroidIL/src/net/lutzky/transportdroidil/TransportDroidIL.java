@@ -137,6 +137,37 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		eggedBg.setInteractiveLinkedClicked(this);
 		motBg.setInteractiveLinkedClicked(this);
 
+		addQueryView();
+
+		AutolocationTextView altv = addAutoLocationTextView();
+
+		updateLocationProgress(altv.getState());
+
+		addQueryResultTextView();
+		
+		showAds();
+	}
+
+	private void addQueryResultTextView() {
+		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
+		tvQueryResult.setText(Html.fromHtml(getPreferences(0).getString("Result", "")));
+		tvQueryResult.setMovementMethod(new LinkMovementMethod());
+		
+		registerForContextMenu(tvQueryResult);
+	}
+
+	private AutolocationTextView addAutoLocationTextView() {
+		AutolocationTextView altv = (AutolocationTextView)findViewById(R.id.query_from);
+		altv.onStateChange(new AutolocationTextView.StateChangeCallback() {
+			@Override
+			public void stateHasChanged(State newState) {
+				updateLocationProgress(newState);
+			}
+		});
+		return altv;
+	}
+
+	private void addQueryView() {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		applyPreferences();
 		queryView.loadPersistentState(getPreferences(0));
@@ -151,24 +182,6 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 				}
 			}
 		});
-
-		AutolocationTextView altv = (AutolocationTextView)findViewById(R.id.query_from);
-		altv.onStateChange(new AutolocationTextView.StateChangeCallback() {
-			@Override
-			public void stateHasChanged(State newState) {
-				updateLocationProgress(newState);
-			}
-		});
-
-		updateLocationProgress(altv.getState());
-
-		TextView tvQueryResult = (TextView)findViewById(R.id.query_result);
-		tvQueryResult.setText(Html.fromHtml(getPreferences(0).getString("Result", "")));
-		tvQueryResult.setMovementMethod(new LinkMovementMethod());
-		
-		registerForContextMenu(tvQueryResult);
-		
-		showAds();
 	}
 
 	private void setLocale() {
@@ -276,6 +289,27 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	private void applyPreferences() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
+		applyProviderPreference(settings);
+
+		applyRTLFix(settings);
+
+		if (settings.getBoolean("clear_completions", false)) {
+			clearHistory(settings);
+		}
+	}
+
+	private void applyRTLFix(SharedPreferences settings) {
+		TextView tv = (TextView)findViewById(R.id.query_result);
+
+		if (settings.getBoolean("rtl_fix", false)) {
+			tv.setGravity(Gravity.RIGHT);
+		}
+		else {
+			tv.setGravity(Gravity.NO_GRAVITY);
+		}
+	}
+
+	private void applyProviderPreference(SharedPreferences settings) {
 		String stored_provider_name = settings.getString("provider", "mot");
 		
 		if (stored_provider_name.equals("egged")) {
@@ -290,30 +324,21 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		}
 		
 		getQueryView().setProvider(provider);
+	}
 
-		TextView tv = (TextView)findViewById(R.id.query_result);
+	private void clearHistory(SharedPreferences settings) {
+		Log.i(TAG, "User requested a history clear");
 
-		if (settings.getBoolean("rtl_fix", false)) {
-			tv.setGravity(Gravity.RIGHT);
-		}
-		else {
-			tv.setGravity(Gravity.NO_GRAVITY);
-		}
+		getQueryView().clearCompletionOptions(settings);
 
-		if (settings.getBoolean("clear_completions", false)) {
-			Log.i(TAG, "User requested a history clear");
+		Toast toast = Toast.makeText(getApplicationContext(),
+				R.string.clear_completions_toast, Toast.LENGTH_LONG);
+		toast.show();
 
-			getQueryView().clearCompletionOptions(settings);
-
-			Toast toast = Toast.makeText(getApplicationContext(),
-					R.string.clear_completions_toast, Toast.LENGTH_LONG);
-			toast.show();
-
-			// Reset the relevant preference, so the user can set it again
-			SharedPreferences.Editor e = settings.edit();
-			e.putBoolean("clear_completions", false);
-			e.commit();
-		}
+		// Reset the relevant preference, so the user can set it again
+		SharedPreferences.Editor e = settings.edit();
+		e.putBoolean("clear_completions", false);
+		e.commit();
 	}
 
 	private QueryView getQueryView() {
