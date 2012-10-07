@@ -26,6 +26,8 @@ public class RealtimePickRouteActivity extends ExpandableListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		Preferences.applyTheme(this);
+		
 		adapter = createListAdapter();
 		setListAdapter(adapter);
 	}

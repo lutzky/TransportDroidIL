@@ -1,5 +1,6 @@
 package net.lutzky.transportdroidil;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -78,5 +79,16 @@ public class Preferences extends PreferenceActivity implements
 		}
 
 		return "";
+	}
+
+	public static void applyTheme(Activity activity) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
+
+		if (settings.getBoolean("light_theme", false)) {
+			activity.setTheme(R.style.Light);
+		}
+		else {
+			activity.setTheme(R.style.Dark);
+		}
 	}
 }

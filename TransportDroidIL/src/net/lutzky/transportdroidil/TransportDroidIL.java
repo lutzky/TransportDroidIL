@@ -131,6 +131,9 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		super.onCreate(savedInstanceState);
 		
 		setLocale();
+		
+		// Make sure that theme is set before setContentView.
+		Preferences.applyTheme(this);
 
 		setContentView(R.layout.main);
 		
