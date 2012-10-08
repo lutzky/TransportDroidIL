@@ -58,6 +58,8 @@ public class RealtimeBusActivity extends ListActivity implements OnItemSelectedL
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Preferences.applyTheme(this);
+
 		super.onCreate(savedInstanceState);
 		
 		getListView().addHeaderView(getLayoutInflater().inflate(R.layout.realtime_bus_table_header, null));

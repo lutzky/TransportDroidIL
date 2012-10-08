@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Light" parent="@android:style/Theme.Light" />
-    <style name="Dark" parent="@android:style/Theme.Black" />
+    <style name="TDILDark" parent="@android:style/Theme" />
+    <style name="TDILLight" parent="@android:style/Theme.Light" />
 </resources>

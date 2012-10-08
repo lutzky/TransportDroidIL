@@ -128,12 +128,12 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// Make sure that theme is set before setContentView and super.onCreate.
+		Preferences.applyTheme(this);
+
 		super.onCreate(savedInstanceState);
 		
 		setLocale();
-		
-		// Make sure that theme is set before setContentView.
-		Preferences.applyTheme(this);
 
 		setContentView(R.layout.main);
 		

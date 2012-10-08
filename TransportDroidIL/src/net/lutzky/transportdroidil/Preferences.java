@@ -22,6 +22,8 @@ public class Preferences extends PreferenceActivity implements
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Preferences.applyTheme(this);
+
 		super.onCreate(savedInstanceState);
 
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -85,10 +87,10 @@ public class Preferences extends PreferenceActivity implements
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		if (settings.getBoolean("light_theme", false)) {
-			activity.setTheme(R.style.Light);
+			activity.setTheme(R.style.TDILLight);
 		}
 		else {
-			activity.setTheme(R.style.Dark);
+			activity.setTheme(R.style.TDILDark);
 		}
 	}
 }
