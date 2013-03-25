@@ -79,7 +79,12 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 			@Override
 			public void run() {
 				updateResultText(lastResult);
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}
+				catch (IllegalArgumentException e) {
+					Log.w(TAG, "mUpdateResults tried to dismiss dialog, and got: " + e);
+				}
 				setButtonsEnabled(true);
 			}
 		};
@@ -90,7 +95,12 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 				String exceptionText = String.format(getString(R.string.error),
 						lastException);
 
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}
+				catch (IllegalArgumentException e) {
+					Log.w(TAG, "mShowError tried to dismiss dialog, and got: " + e);
+				}
 
 				Toast toast = Toast.makeText(getApplicationContext(),
 						exceptionText, Toast.LENGTH_LONG);
