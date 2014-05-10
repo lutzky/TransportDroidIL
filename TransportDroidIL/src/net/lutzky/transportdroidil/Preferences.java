@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 public class Preferences extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 	private ListPreference providerPreference;
+	private ListPreference extraInfoPreference;
 	private SharedPreferences sharedPreferences;
 
 	/*
@@ -39,22 +40,29 @@ public class Preferences extends PreferenceActivity implements
 
 		return providerPreference;
 	}
+	
+	@SuppressWarnings("deprecation")
+	ListPreference getExtraInfoPreference() {
+		if (extraInfoPreference == null) {
+			extraInfoPreference = (ListPreference) findPreference("extra_info");
+		}
+		
+		return extraInfoPreference;
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		updateProviderSummary();
+		updateSummaries();
 		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
 
-	private void updateProviderSummary() {
-		String currentProviderKey = sharedPreferences.getString("provider", "");
-		if (currentProviderKey.length() == 0) {
-			getProviderPreference().setSummary("");
-			return;
-		}
+	private void updateSummaries() {
 		getProviderPreference().setSummary(
 				getProviderName(sharedPreferences.getString("provider", "")));
+		
+		getExtraInfoPreference().setSummary(
+				sharedPreferences.getString("extra_info", ""));
 	}
 
 	@Override
@@ -65,7 +73,7 @@ public class Preferences extends PreferenceActivity implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		updateProviderSummary();
+		updateSummaries();
 	}
 
 	private String getProviderName(String providerKey) {

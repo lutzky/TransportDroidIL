@@ -16,6 +16,10 @@
     <item>mot</item>
     <item>egged</item>
 </string-array>
+<string-array name="extra_info_values">
+    <item>כמה זמן</item>
+    <item>כמה כסף</item>
+</string-array>
 <string name="preferences">הגדרות</string>
 <string name="my_location">המיקום שלי</string>
 <string name="rtl_fix">תיקון יישור לימין</string>
@@ -43,9 +47,8 @@
 <string name="realtime_stop">תחנה</string>
 <string name="find_location">אתר מיקום</string>
 <string name="reverse_direction">הפוך כיוון</string>
-<string name="how_much_time_query_suffix">כמה זמן</string>
-<string name="how_much_time_pref">בקש הערכת זמנים</string>
-<string name="how_much_time_pref_desc">מוסיף את המילים \&quot;כמה זמן\&quot; לסוף השאילתה</string>
+<string name="extra_info">מידע נוסף להצגה</string>
+<string name="extra_info_dialog_title">מידע נוסף להצגה (ספקי המידע תומכים רק באחד)</string>
 <string name="pref_light_theme_title">רקע בהיר</string>
 <string name="pref_light_theme_summary_on">לאחר הפעלה מחדש, רקע האפליקציה יהיה בהיר</string>
 <string name="pref_light_theme_summary_off">לאחר הפעלה מחדש, רקע האפליקציה יהיה כהה</string>

@@ -115,10 +115,9 @@ public class QueryView extends LinearLayout implements View.OnClickListener {
 			queryString.append(time);
 		}
 		
-		if (settings.getBoolean("how_much_time", true)) {
-			queryString.append(" ");
-			queryString.append(getResources().getString(R.string.how_much_time_query_suffix));
-		}
+		queryString.append(" ");
+	
+		queryString.append(settings.getString("extra_info", ""));
 		
 		return queryString.toString();
 	}
