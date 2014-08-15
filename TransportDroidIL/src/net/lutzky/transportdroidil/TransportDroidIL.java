@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.ads.*;
+import com.google.android.gms.ads.*;
 
 /*
  * Deprecation warnings suppressed for use of old CliboardManager API. We
@@ -223,11 +223,15 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 		if (res.getBoolean(R.bool.useAds) == false) {
 			return;
 		}
-		adView = new AdView(this, AdSize.BANNER, res.getString(R.string.adUnitId));
+		adView = new AdView(this);
+		adView.setAdUnitId(res.getString(R.string.adUnitId));
+		adView.setAdSize(AdSize.BANNER);
+		
 		LinearLayout layout = (LinearLayout)findViewById(R.id.mainLayout);
 		layout.addView(adView);
-		AdRequest adRequest = new AdRequest();
-		adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+		AdRequest adRequest = new AdRequest.Builder()
+			.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+			.build();
 		adView.loadAd(adRequest);
 	}
 
@@ -261,7 +265,18 @@ public class TransportDroidIL extends Activity implements InteractiveLinkClicked
 	protected void onPause() {
 		QueryView queryView = (QueryView) findViewById(R.id.queryview);
 		queryView.savePersistentState(getPreferences(0));
+		if (adView != null) {
+			adView.pause();
+		}
 		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (adView != null) {
+			adView.resume();
+		}
 	}
 
 	@Override

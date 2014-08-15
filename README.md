@@ -34,6 +34,15 @@ display it on your phone. In spite our best effort, this process is prone to
 errors, so we can not be responsible if you are late to an important meeting
 with your boss...
 
+Building
+--------
+
+Copy
+`[SDK]/extras/google/google_play_services/libproject/google-play-services_lib`
+to this directory. Then use Eclipse. You can run unit tests from the
+`TransportDroidILTest/` project. Yes, I really should convert this to an `ant`
+project.
+
 License
 -------
 
